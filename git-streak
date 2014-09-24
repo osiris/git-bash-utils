@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2014 Osiris Alejandro Gomez <osiux@osiux.com.ar>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+TODAY=$(date +%Y-%m-%d)
+LIMIT=$(date --date='-30 days' +%Y-%m-%d)
+GIT_DAYS=$(git log --date=iso --since $LIMIT | grep Date | awk '{print $2}' | sort -u)
+BAR=''
+
+for d in $(seq 30 -1 1)
+do
+  DATE=$(date --date="-${d} days" +%Y-%m-%d)
+  DAY=$(date --date="-${d} days" +%d)
+  COMMIT=$(echo $GIT_DAYS | tr " " "\n" | grep "$DATE")
+
+  if [ "$COMMIT" = "$DATE" ]
+  then
+    STREAK=▣
+  else
+    STREAK=□
+  fi
+
+  BAR=${BAR}${STREAK}
+done
+
+echo $BAR
+

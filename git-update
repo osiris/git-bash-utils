@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2014 Osiris Alejandro Gomez <osiux@osiux.com.ar>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+REPOS=$HOME'/.git-repos'
+
+white='[0m'
+green='[01;32m'
+red='[01;31m'
+yellow='[01;33m'
+
+PUSH=0
+
+test -e $REPOS
+OK=$?
+
+if [ $OK -ne 0 ]
+then
+  echo ERROR $REPOS not found
+  exit 1
+fi
+
+while getopts "s" OPTION
+do
+  case $OPTION in
+    s)
+      PUSH=1
+      ;;
+  esac
+done
+
+echo
+
+for DIR in $(cat $REPOS)
+do
+  cd ~
+
+  if [ ! -d $DIR ]
+  then
+    S=${red}'✖'
+    echo ' '${S}${yellow} ${DIR} ${red}'NOT FOUND'${green}
+    continue
+  fi
+
+  if [ $PUSH -eq 1 ]
+  then
+    cd $DIR && git pull -q && git push -q >/dev/null
+  else
+    cd $DIR && git pull -q >/dev/null
+  fi
+
+  E=$(echo $?)
+
+  if [ $E -eq 0 ]
+  then
+    S=${green}'✔'
+  else
+    S=${red}'✖'
+  fi
+
+  BAR=$(git-streak)
+  echo ' '${S}${yellow}' '${BAR}' '${DIR}
+  LOG=$(git log --pretty --format=oneline | head -1 | cut -c -8,41-)
+  echo -e "${white}\t"$LOG
+done
+
+echo $white
+

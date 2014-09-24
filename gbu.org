@@ -1,0 +1,24 @@
+#+TITLE:     Git Bash Utils
+#+AUTHOR:    Osiris Alejandro Gómez
+#+EMAIL:     osiux@osiux.com
+#+LANGUAGE:  en
+#+LINK:      ISSUE https://github.com/osiris/git-bash-utils/issues/
+#+LINK:      GIT https://github.com/osiris/git-bash-utils/commit/
+
+
+
+** Releases
+*** Release 0.1 [2/2]
+**** DONE publish actual version of scripts
+     CLOSED: [2014-09-24 mié 09:33]
+     :LOGBOOK:
+     - State "DONE"       from "NEXT"       [2014-09-24 mié 09:33]
+     CLOCK: [2014-09-24 mié 08:54]--[2014-09-24 mié 09:32] =>  0:38
+     :END:
+
+**** DONE add =README.org=
+     CLOSED: [2014-09-24 mié 10:00]
+     :LOGBOOK:
+     - State "DONE"       from "NEXT"       [2014-09-24 mié 10:00]
+     CLOCK: [2014-09-24 mié 09:33]--[2014-09-24 mié 09:58] =>  0:25
+     :END:

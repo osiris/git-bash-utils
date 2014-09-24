@@ -1,0 +1,89 @@
+#+TITLE:     Git Bash Utils
+#+AUTHOR:    Osiris Alejandro Gómez
+#+EMAIL:     osiux@osiux.com
+#+LANGUAGE:  es
+#+LINK_HOME: index.html
+#+LINK:      ISSUE https://github.com/osiris/git-bash-utils/issues/
+#+INCLUDE: "gbu.org"
+
+
+** overview
+
+   Repository of bash scripts for various git utils.
+
+** install
+
+   Clone the repository:
+
+   #+BEGIN_SRC sh :session :results none :exports code
+     cd ~
+     git clone https://github.com/osiris/git-bash-utils
+   #+END_SRC
+
+   Add to =~/.bashrc=:
+
+   #+BEGIN_SRC sh :session :results none :exports code
+     if [ -d "$HOME/git-bash-utils" ]
+     then
+         PATH="$HOME/git-bash-utils:$PATH"
+         source $HOME/git-bash-utils/git-alias
+     fi
+   #+END_SRC
+
+** scripts
+
+*** =git-streak=
+
+    Show streak for the last 30 days.
+
+    #+BEGIN_SRC sh :session :exports both
+      cd ~/org-bash-utils
+      git-streak
+    #+END_SRC
+
+    #+RESULTS:
+    : □□□▣□□□□□□□□□□□□▣□▣□□□▣□□□□□▣▣
+
+*** =git-update=
+
+    First, set the repositores directories in =~/.git-repos=
+
+    #+BEGIN_SRC sh :session :results output
+      cat ~/.git-repos
+    #+END_SRC
+
+    #+RESULTS:
+    : bin
+    : blog
+    : data/config
+    : direplos
+    : html
+    : media-bash-utils
+    : org
+    : org-bash-utils
+
+    The =git-update= script, update each repo, show streak and last
+    commit log.
+
+    #+BEGIN_SRC sh :session :results none :exports code
+      git-update
+    #+END_SRC
+
+    #+BEGIN_EXAMPLE
+      ✔ ▣□▣▣□□□□□□▣▣□▣□▣▣▣▣□□▣▣▣▣□□□▣▣ bin
+      f4dfdde2 @ 00:00 hs - Autocommit
+      ✔ □▣□□□□□□□□□□□□□□□□□□□□□□□□□□□□ blog
+      9c0b2794 @ 00:05 hs - Test mejora ox-rss gracias a Bastien
+      ✔ ▣□▣▣□□□▣▣▣▣▣□▣▣▣▣▣▣□□▣▣▣□▣□□▣▣ data/config
+      cd57b5a2 @ 00:00 hs - Autocommit
+      ✔ □□□▣□□□□▣□▣□□□▣▣▣▣▣□□□▣□□▣□□□▣ direplos
+      56b753d0 @ 00:05 hs - add fbcat in deb.sh
+      ✔ □▣□□□□□□□□□□□□□□□□□□□□□□□□□□□□ html
+      4c10b00f @ 00:05 hs - optimizo imagenes segun gtmetrix.com
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ media-bash-utils
+      9d860487 @ 02:11 hs - add blur, epub/pdf-preview, media-alias and documentation
+      ✔ ▣▣▣▣▣□□▣▣□▣▣□□▣▣▣□▣□□▣▣▣▣▣▣□▣▣ org
+      f7bc82c5 @ 00:00 hs - Autocommit
+      ✔ □□□▣□□□□□□□□□□□□▣□▣□□□▣□□□□□▣▣ org-bash-utils
+      423caa53 @ 00:$0 hs - fix plot all columns and add paratemeters by graph type in org-plot
+    #+END_EXAMPLE
