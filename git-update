@@ -58,9 +58,9 @@ do
 
   if [ $PUSH -eq 1 ]
   then
-    cd $DIR && git pull -q && git push -q >/dev/null
+    cd $DIR && git pull -q 2>/dev/null && git push -q 2>/dev/null
   else
-    cd $DIR && git pull -q >/dev/null
+    cd $DIR && git pull -q 2>/dev/null 1>/dev/null
   fi
 
   E=$(echo $?)
@@ -74,8 +74,8 @@ do
 
   BAR=$(git-streak)
   echo ' '${S}${yellow}' '${BAR}' '${DIR}
-  LOG=$(git log --pretty --format=oneline | head -1 | cut -c -8,41-)
-  echo -e "${white}\t"$LOG
+  LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
+  echo -e "${white}\t "$LOG
 done
 
 echo $white

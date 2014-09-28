@@ -8,7 +8,7 @@
 
 
 ** Releases
-*** Release 0.1 [2/2]
+*** Release 0.1 [3/3]
 **** DONE publish actual version of scripts
      CLOSED: [2014-09-24 mié 09:33]
      :LOGBOOK:
@@ -21,4 +21,11 @@
      :LOGBOOK:
      - State "DONE"       from "NEXT"       [2014-09-24 mié 10:00]
      CLOCK: [2014-09-24 mié 09:33]--[2014-09-24 mié 09:58] =>  0:25
+     :END:
+
+**** DONE supress stderror and better log
+     CLOSED: [2014-09-28 dom 10:49]
+     :LOGBOOK:
+     - State "DONE"       from "NEXT"       [2014-09-28 dom 10:49]
+     CLOCK: [2014-09-28 dom 10:23]--[2014-09-28 dom 10:48] =>  0:25
      :END:
