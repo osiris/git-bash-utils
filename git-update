@@ -23,7 +23,9 @@ green='[01;32m'
 red='[01;31m'
 yellow='[01;33m'
 
+CLONE=0
 PUSH=0
+PULL=0
 
 test -e $REPOS
 OK=$?
@@ -34,9 +36,15 @@ then
   exit 1
 fi
 
-while getopts "s" OPTION
+while getopts "csl" OPTION
 do
   case $OPTION in
+    c)
+      CLONE=1
+      ;;
+    l)
+      PULL=1
+      ;;
     s)
       PUSH=1
       ;;
@@ -45,22 +53,32 @@ done
 
 echo
 
-for DIR in $(cat $REPOS)
+cat $REPOS | while read R
 do
   cd ~
+  DIR=$(echo $R | awk '{print $1}')
+  GIT=$(echo $R | awk '{print $2}')
 
   if [ ! -d $DIR ]
   then
-    S=${red}'✖'
-    echo ' '${S}${yellow} ${DIR} ${red}'NOT FOUND'${green}
-    continue
+    if [ $CLONE -eq 1 ]
+    then
+      git clone $GIT $DIR
+    else
+      S=${red}'✖'
+      echo ' '${S}${yellow} ${DIR} ${red}'NOT FOUND'${green}
+      continue
+    fi
   fi
 
   if [ $PUSH -eq 1 ]
   then
-    cd $DIR && git pull -q 2>/dev/null && git push -q 2>/dev/null
-  else
-    cd $DIR && git pull -q 2>/dev/null 1>/dev/null
+    cd $DIR && git push -q 2>/dev/null 1>/dev/null
+  fi
+  
+  if [ $PULL -eq 1 ]
+  then
+    cd ~ && cd $DIR && git pull -q 2>/dev/null 1>/dev/null
   fi
 
   E=$(echo $?)
@@ -72,10 +90,11 @@ do
     S=${red}'✖'
   fi
 
-  BAR=$(git-streak)
+  cd ~ && cd $DIR && BAR=$(git-streak)
+
   echo ' '${S}${yellow}' '${BAR}' '${DIR}
   LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
-  echo -e "${white}\t "$LOG
+  echo -e "${white}\t  "$LOG
 done
 
 echo $white
