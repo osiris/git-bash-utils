@@ -28,7 +28,7 @@ alias gd6="git diff HEAD~6 "
 alias gd7="git diff HEAD~7 "
 alias gd8="git diff HEAD~8 "
 alias gd9="git diff HEAD~9 "
-alias gde="git status | grep deleted | awk '{print \$3}'"
+alias gde="git status | grep deleted | awk '{print \$2}'"
 alias gdf="git diff"
 alias gdt="git difftool --tool=vimdiff "
 
