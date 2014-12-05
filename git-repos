@@ -74,7 +74,7 @@ do
   if [ $PUSH -eq 1 ]
   then
     cd $DIR
-    HTTPS=$(egrep -o $DIR.*https $REPOS | awk '{print $2}')
+    HTTPS=$(egrep -o "$DIR\ +https" $REPOS | awk '{print $2}')
     [ ! "$HTTPS" = "https" ] && git push -q 2>/dev/null 1>/dev/null
   fi
   
