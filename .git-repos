@@ -1,8 +1,61 @@
-bin
-blog
-data/config
-direplos
-html
-media-bash-utils
-org
-org-bash-utils
+# útil
+csvkit                  https://github.com/onyxfish/csvkit
+data_hacks              https://github.com/bitly/data_hacks
+describe                https://github.com/drbunsen/describe
+distribution            https://github.com/philovivero/distribution
+elastic-mongodb         https://github.com/diegows/elastic-mongodb
+librevpn                https://github.com/fauno/librevpn
+maildir-deduplicate     https://github.com/kdeldycke/maildir-deduplicate
+nbwmon                  https://github.com/causes-/nbwmon
+parse_bash_history      https://github:swooingfish/parse_bash_history
+password-store          http://git.zx2c4.com/password-store
+# público
+aps2dot                 github:osiris/aps2dot
+blog                    github:osiris/osiux-blog
+direplos                github:osiris/direplos
+git-bash-utils          github:osiris/git-bash-utils
+html                    github:osiris/osiris.github
+libretA7                github:osiris/libretA7
+media-bash-utils        github:osiris/media-bash-utils
+multiboot               github:osiris/multiboot
+org-bash-utils          github:osiris/org-bash-utils
+org-mode-doc-es         github:osiris/org-mode-doc-es
+pcap2dot                github:osiris/pcap2dot
+sugar-graphviz          github:osiris/sugar-graphviz
+traducciones            github:osiris/traducciones
+# arduino
+ArduinoDevel            https://github.com/arons/ArduinoDevel.git
+arduino-Makefile        https://github.com/mjoldfield/Arduino-Makefile.git
+arduino-mode            https://github.com/bookest/arduino-mode.git
+ino                     https://github.com/amperka/ino.git
+# gcoop
+letras_viajeras         github:gcoop-libre/letras_viajeras
+# org-mode + emacs
+Highlight-Indentation   https://github.com/antonj/Highlight-Indentation-for-Emacs.git
+anything-config         git://repo.or.cz/anything-config.git
+color-theme-tangotango  https://github.com/juba/color-theme-tangotango.git
+dash.el                 https://github.com/magnars/dash.el.git
+el-get                  https://github.com/dimitri/el-get.git
+elnode                  https://github.com/nicferrier/elnode.git
+emacs-calfw             https://github.com/kiwanami/emacs-calfw.git
+emacs-db                https://github.com/nicferrier/emacs-db.git
+emacs-fakir             https://github.com/nicferrier/emacs-fakir.git
+emacs-git-gutter        https://github.com/syohex/emacs-git-gutter.git
+emacs-git-gutter-fringe https://github.com/syohex/emacs-git-gutter-fringe.git
+emacs-kv                https://github.com/nicferrier/emacs-kv.git
+emacs-noflet            https://github.com/nicferrier/emacs-noflet.git
+emacs-request           https://github.com/tkf/emacs-request.git
+emacs-web               https://github.com/nicferrier/emacs-web.git
+esxml                   https://github.com/tali713/esxml.git
+o-blog                  https://github.com/renard/o-blog.git
+org-article             https://github.com/tsdye/org-article.git
+org-caldav              https://github.com/dengste/org-caldav.git
+org-jira                https://github.com/baohaojun/org-jira.git
+org-mode                git://orgmode.org/org-mode.git
+org-redmine             https://github.com/gongo/org-redmine.git
+org-trello              https://github.com/ardumont/org-trello.git
+php-mode                https://github.com/ejmr/php-mode.git
+rainbow-mode            https://github.com/emacsmirror/rainbow-mode.git
+s.el                    https://github.com/magnars/s.el.git
+worg                    git://orgmode.org/worg.git
+yasni                   https://github.com/capitaomorte/yasnippet
