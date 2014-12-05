@@ -26,6 +26,7 @@ yellow='[01;33m'
 CLONE=0
 PUSH=0
 PULL=0
+SHOW_LOG=0
 
 test -e $REPOS
 OK=$?
@@ -36,11 +37,14 @@ then
   exit 1
 fi
 
-while getopts "csl" OPTION
+while getopts "cgsl" OPTION
 do
   case $OPTION in
     c)
       CLONE=1
+      ;;
+    g)
+      SHOW_LOG=1
       ;;
     l)
       PULL=1
@@ -95,8 +99,11 @@ do
   cd ~ && cd $DIR && BAR=$(git-streak)
 
   echo ' '${S}${yellow}' '${BAR}' '${DIR}
-  LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
-  echo -e "${white}\t  "$LOG
+  if [ $SHOW_LOG -eq 1 ]
+  then
+    LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
+    echo -e "${white}\t  "$LOG
+  fi
 done
 
 echo $white
