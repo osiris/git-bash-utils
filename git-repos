@@ -27,6 +27,7 @@ CLONE=0
 PUSH=0
 PULL=0
 SHOW_LOG=0
+FILTER=''
 
 test -e $REPOS
 OK=$?
@@ -37,11 +38,14 @@ then
   exit 1
 fi
 
-while getopts "cgsl" OPTION
+while getopts "cf:gsl" OPTION
 do
   case $OPTION in
     c)
       CLONE=1
+      ;;
+    f)
+      FILTER=$OPTARG
       ;;
     g)
       SHOW_LOG=1
@@ -57,7 +61,14 @@ done
 
 echo
 
-grep -v ^# $REPOS | while read R
+if [ -z $FILTER ]
+then
+ GIT_REPOS=$(grep -v ^# $REPOS)
+else
+ GIT_REPOS=$(egrep "$FILTER" $REPOS | grep -v ^#)
+fi
+
+echo "$GIT_REPOS" | while read R
 do
   cd ~
   DIR=$(echo $R | awk '{print $1}')

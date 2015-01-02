@@ -36,8 +36,8 @@ alias gft="git fetch "
 
 alias ggr="git grep "
 
-alias ghs="git log | grep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@' | tr ':' ' '"
-alias ghss="git log | grep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@' | tr ':' ' ' | aws1"
+alias ghm="git log | grep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ '"
+alias ghs="ghm | awk 'function m(h) {split(h,A,\":\");return A[1]*60+A[2]} {t+=m(\$1)} END {printf \"%02d:%02d\",t/(60),t%60}'"
 
 alias gl1="git log -n1"
 alias gl2="git log -n2"

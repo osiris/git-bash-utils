@@ -44,46 +44,126 @@
     #+RESULTS:
     : □□□▣□□□□□□□□□□□□▣□▣□□□▣□□□□□▣▣
 
-*** =git-update=
+*** =git-alias=
+
+    Show time in commits:
+
+    #+BEGIN_SRC sh :session :results output
+      cd ~/git-bash-utils
+      ghm
+    #+END_SRC
+
+    #+RESULTS:
+    : 00:05
+    : 00:05
+    : 00:02
+    : 00:10
+    : 00:01
+    : 00:02
+    : 00:05
+    : 00:01
+    : 00:01
+    : 00:40
+    : 00:25
+    : 01:03
+
+    Show sum time in commits:
+
+    #+BEGIN_SRC sh :session :results output
+      cd ~/git-bash-utils
+      ghs
+    #+END_SRC
+
+    #+RESULTS:
+    : 02:40
+
+*** =git-repos=
 
     First, set the repositores directories in =~/.git-repos=
 
     #+BEGIN_SRC sh :session :results output
-      cat ~/.git-repos
+      cat ~/.git-repos | grep osiris
     #+END_SRC
 
     #+RESULTS:
-    : bin
-    : blog
-    : data/config
-    : direplos
-    : html
-    : media-bash-utils
-    : org
-    : org-bash-utils
+    #+begin_example
+    aps2dot                 github:osiris/aps2dot
+    blog                    github:osiris/osiux-blog
+    direplos                github:osiris/direplos
+    git-bash-utils          github:osiris/git-bash-utils
+    html                    github:osiris/osiris.github
+    libretA7                github:osiris/libretA7
+    media-bash-utils        github:osiris/media-bash-utils
+    multiboot               github:osiris/multiboot
+    org-bash-utils          github:osiris/org-bash-utils
+    org-mode-doc-es         github:osiris/org-mode-doc-es
+    pcap2dot                github:osiris/pcap2dot
+    sugar-graphviz          github:osiris/sugar-graphviz
+    traducciones            github:osiris/traducciones
+    #+end_example
 
-    The =git-update= script, update each repo, show streak and last
+    The =git-repos= script, update each repo, show streak and last
     commit log.
 
-    #+BEGIN_SRC sh :session :results none :exports code
-      git-update
+    #+BEGIN_SRC sh :session :results output :exports code
+      git-repos -f osiris
+    #+END_SRC
+
+    #+RESULTS:
+    #+begin_example
+
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ aps2dot
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ blog
+     ✔ □▣▣□□□□□□▣□□□□□□□□□□□□□□□□□▣□□▣ direplos
+     ✔ □□▣□□□□□□□□□□□□□□□□□□□□□□□□□□□□ git-bash-utils
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ html
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ libretA7
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□▣▣□□ media-bash-utils
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ multiboot
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ org-bash-utils
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ org-mode-doc-es
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ pcap2dot
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ sugar-graphviz
+     ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ traducciones
+     #+end_example
+
+    You can pull and push all repos at same time:
+
+    #+BEGIN_SRC sh :session :results output :exports code
+      git-repos -f osiris -l -s
+    #+END_SRC
+
+    You can add a log with last commit info:
+
+    #+BEGIN_SRC sh :session :results output :exports code
+      git-repos -f osiris -g
     #+END_SRC
 
     #+BEGIN_EXAMPLE
-      ✔ ▣□▣▣□□□□□□▣▣□▣□▣▣▣▣□□▣▣▣▣□□□▣▣ bin
-      f4dfdde2 @ 00:00 hs - Autocommit
-      ✔ □▣□□□□□□□□□□□□□□□□□□□□□□□□□□□□ blog
-      9c0b2794 @ 00:05 hs - Test mejora ox-rss gracias a Bastien
-      ✔ ▣□▣▣□□□▣▣▣▣▣□▣▣▣▣▣▣□□▣▣▣□▣□□▣▣ data/config
-      cd57b5a2 @ 00:00 hs - Autocommit
-      ✔ □□□▣□□□□▣□▣□□□▣▣▣▣▣□□□▣□□▣□□□▣ direplos
-      56b753d0 @ 00:05 hs - add fbcat in deb.sh
-      ✔ □▣□□□□□□□□□□□□□□□□□□□□□□□□□□□□ html
-      4c10b00f @ 00:05 hs - optimizo imagenes segun gtmetrix.com
-      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ media-bash-utils
-      9d860487 @ 02:11 hs - add blur, epub/pdf-preview, media-alias and documentation
-      ✔ ▣▣▣▣▣□□▣▣□▣▣□□▣▣▣□▣□□▣▣▣▣▣▣□▣▣ org
-      f7bc82c5 @ 00:00 hs - Autocommit
-      ✔ □□□▣□□□□□□□□□□□□▣□▣□□□▣□□□□□▣▣ org-bash-utils
-      423caa53 @ 00:$0 hs - fix plot all columns and add paratemeters by graph type in org-plot
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ aps2dot
+        831c7c8 2012-03-12 15:04 osiris 00:05 hs - add example APS.txt, remove gitignore and convert README to rst
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ blog
+        5a0a2ff 2014-10-12 12:57 osiris 00:05 hs - nuevamente corrijo link epub tension en la red :-S
+      ✔ □▣▣□□□□□□▣□□□□□□□□□□□□□□□□□▣□□▣ direplos
+        92c5d9b 2015-01-02 15:55 osiris 00:05 hs - add debian-keyring and realpath in deb
+      ✔ □□▣□□□□□□□□□□□□□□□□□□□□□□□□□□□□ git-bash-utils
+        e76a782 2014-12-05 12:31 osiris 00:05 hs - add -g parameter for show_log (default 0) in git-repos
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ html
+        57efd93 2014-10-12 12:56 osiris 00:05 hs - nuevamente corrijo link epub tension en la red :-S
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ libretA7
+        72ace93 2014-04-24 03:02 osiris 01:00 hs - refactor Makefile, remove examples directory, add new drafts
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□▣▣□□ media-bash-utils
+        f566a75 2014-12-31 15:42 osiris 01:00 hs - better duplicate detect and fix exif datetime.
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ multiboot
+        7629e17 2014-04-23 00:18 osiris 01:00 hs - add grub.cfg
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ org-bash-utils
+        99d109f 2014-10-22 23:25 osiris 00:05 hs - add day name in x axis
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ org-mode-doc-es
+        18a25af 2014-03-23 11:46 osiris 01:04 hs - reorganizo archivos y realizo traducción de prueba 1%
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ pcap2dot
+        5909f77 2014-11-28 12:32 osiris 02:00 hs - add ip2png from hosts file
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ sugar-graphviz
+        c7852ef 2014-09-15 13:52 osiris 02:15 hs - refactor parameters, add ignore_tables in sugar-relationships
+      ✔ □□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ traducciones
+        12888fb 2014-09-25 09:43 osiris 00:01 hs - Corrección menor
     #+END_EXAMPLE

@@ -8,7 +8,7 @@
 
 
 ** Releases
-*** Release 0.1 [4/4]
+*** Release 0.1 [6/6]
 **** DONE publish actual version of scripts
      CLOSED: [2014-09-24 mié 09:33]
      :LOGBOOK:
@@ -36,3 +36,16 @@
      CLOCK: [2014-10-06 lun 09:00]--[2014-10-06 lun 09:40] =>  0:40
      :END:
 
+**** DONE sum times in commits
+     CLOSED: [2015-01-02 vie 19:55]
+     :LOGBOOK:
+     - State "DONE"       from "NEXT"       [2015-01-02 vie 19:55]
+     CLOCK: [2015-01-02 vie 19:10]--[2015-01-02 vie 19:29] =>  0:19
+     :END:
+
+**** DONE filter git-repos
+     CLOSED: [2015-01-02 vie 19:55]
+     :LOGBOOK:
+     - State "DONE"       from "NEXT"       [2015-01-02 vie 19:55]
+     CLOCK: [2015-01-02 vie 19:30]--[2015-01-02 vie 19:53] =>  0:23
+     :END:
