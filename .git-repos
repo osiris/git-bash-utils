@@ -9,6 +9,9 @@ maildir-deduplicate     https://github.com/kdeldycke/maildir-deduplicate
 nbwmon                  https://github.com/causes-/nbwmon
 parse_bash_history      https://github:swooingfish/parse_bash_history
 password-store          http://git.zx2c4.com/password-store
+sshrc                   https://github.com/Russell91/sshrc
+flexget-dev             https://github.com/Flexget/Flexget
+# personal
 # público
 aps2dot                 github:osiris/aps2dot
 blog                    github:osiris/osiux-blog
@@ -23,11 +26,18 @@ org-mode-doc-es         github:osiris/org-mode-doc-es
 pcap2dot                github:osiris/pcap2dot
 sugar-graphviz          github:osiris/sugar-graphviz
 traducciones            github:osiris/traducciones
+# php
+php-cs-fixer            https://github.com/fabpot/PHP-CS-Fixer
+vim-php-cs-fixer        https://github.com/stephpy/vim-php-cs-fixer
 # arduino
 ArduinoDevel            https://github.com/arons/ArduinoDevel.git
 arduino-Makefile        https://github.com/mjoldfield/Arduino-Makefile.git
 arduino-mode            https://github.com/bookest/arduino-mode.git
 ino                     https://github.com/amperka/ino.git
+vim-arduino             https://github.com/tclem/vim-arduino
+vim-arduino-ino         https://github.com/jplaut/vim-arduino-ino
+vim-arduino-snippets    https://github.com/sudar/vim-arduino-snippets
+vim-arduino-syntax      https://github.com/sudar/vim-arduino-syntax
 # gcoop
 letras_viajeras         github:gcoop-libre/letras_viajeras
 # org-mode + emacs
