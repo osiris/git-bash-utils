@@ -11,6 +11,17 @@ parse_bash_history      https://github:swooingfish/parse_bash_history
 password-store          http://git.zx2c4.com/password-store
 sshrc                   https://github.com/Russell91/sshrc
 flexget-dev             https://github.com/Flexget/Flexget
+cozy                    https://github.com/cozy/cozy-setup
+# ansible
+ansible                 https://github.com/ansible/ansible
+ansible-examples        https://github.com/ansible/ansible-examples
+ansible-mmoya           https://github.com/mmoya/ansible-playbooks
+ansible-openvz          https://github.com/rivik/ansible-openvz
+ansible-playbook-pve    https://github.com/dpausp/ansible-playbook-pve
+ansible-raymiiorg       https://github.com/RaymiiOrg/ansible
+debops                  https://github.com/debops/debops
+# games
+git-game                https://github.com/hgarc014/git-game
 # personal
 # público
 aps2dot                 github:osiris/aps2dot
