@@ -27,6 +27,7 @@ CLONE=0
 PUSH=0
 PULL=0
 SHOW_LOG=0
+SHOW_TIME=0
 FILTER=''
 
 test -e $REPOS
@@ -38,7 +39,7 @@ then
   exit 1
 fi
 
-while getopts "cf:gsl" OPTION
+while getopts "cf:glts" OPTION
 do
   case $OPTION in
     c)
@@ -55,6 +56,9 @@ do
       ;;
     s)
       PUSH=1
+      ;;
+    t)
+      SHOW_TIME=1
       ;;
   esac
 done
@@ -86,6 +90,7 @@ do
     fi
   fi
 
+
   if [ $PUSH -eq 1 ]
   then
     cd $DIR
@@ -109,7 +114,15 @@ do
 
   cd ~ && cd $DIR && BAR=$(git-streak)
 
-  echo ' '${S}${yellow}' '${BAR}' '${DIR}
+  if [ $SHOW_TIME -eq 1 ]
+  then
+      HOURS=$(git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}')
+
+      printf " %s%s %s %7s %s\n" $S $yellow $BAR $HOURS $DIR
+  else
+      echo ' '${S}${yellow}' '${BAR}' '${DIR}
+  fi
+
   if [ $SHOW_LOG -eq 1 ]
   then
     LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
