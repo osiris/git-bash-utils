@@ -31,6 +31,7 @@ git-bash-utils          github:osiris/git-bash-utils
 html                    github:osiris/osiris.github
 libretA7                github:osiris/libretA7
 media-bash-utils        github:osiris/media-bash-utils
+minimal-bash-prompt     github:osiris/minimal-bash-prompt
 multiboot               github:osiris/multiboot
 org-bash-utils          github:osiris/org-bash-utils
 org-mode-doc-es         github:osiris/org-mode-doc-es
