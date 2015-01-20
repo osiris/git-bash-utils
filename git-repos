@@ -29,6 +29,7 @@ PULL=0
 SHOW_LOG=0
 SHOW_TIME=0
 FILTER=''
+EXCLUDE=''
 
 test -e $REPOS
 OK=$?
@@ -39,7 +40,7 @@ then
   exit 1
 fi
 
-while getopts "cf:glts" OPTION
+while getopts "cf:gltsx:" OPTION
 do
   case $OPTION in
     c)
@@ -60,6 +61,9 @@ do
     t)
       SHOW_TIME=1
       ;;
+    x)
+      EXCLUDE=$OPTARG
+      ;;
   esac
 done
 
@@ -67,12 +71,23 @@ echo
 
 if [ -z $FILTER ]
 then
- GIT_REPOS=$(grep -v ^# $REPOS)
+  if [ -z $EXCLUDE ]
+  then
+    GIT_REPOS=$(grep -v ^# $REPOS)
+  else
+    GIT_REPOS=$(grep -v ^# $REPOS | grep -v $EXCLUDE)
+  fi
 else
- GIT_REPOS=$(egrep "$FILTER" $REPOS | grep -v ^#)
+  if [ -z $EXCLUDE ]
+  then
+    GIT_REPOS=$(egrep "$FILTER" $REPOS | grep -v ^#)
+  else
+    GIT_REPOS=$(egrep "$FILTER" $REPOS | grep -v ^# | egrep -v $EXCLUDE)
+  fi
 fi
 
-echo "$GIT_REPOS" | while read R
+
+echo "$GIT_REPOS" | sort | while read R
 do
   cd ~
   DIR=$(echo $R | awk '{print $1}')
