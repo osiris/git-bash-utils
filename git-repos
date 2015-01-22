@@ -93,6 +93,8 @@ do
   DIR=$(echo $R | awk '{print $1}')
   GIT=$(echo $R | awk '{print $2}')
 
+  echo ${white}
+
   if [ ! -d $DIR ]
   then
     if [ $CLONE -eq 1 ]
