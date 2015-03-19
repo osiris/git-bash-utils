@@ -16,15 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-TODAY=$(date +%Y-%m-%d)
-LIMIT=$(date --date='-30 days' +%Y-%m-%d)
-GIT_DAYS=$(git log --date=iso --since $LIMIT | grep Date | awk '{print $2}' | sort -u)
+TODAY=`date +%Y-%m-%d`
+LIMIT=`date --date='-30 days' +%Y-%m-%d`
+GIT_DAYS=`git log --date=iso --since $LIMIT | grep Date | awk '{print $2}' | sort -u`
 BAR=''
 
-for d in $(seq 30 -1 0)
+for d in `seq 30 -1 0`
 do
-  DATE=$(date --date="-${d} days" +%Y-%m-%d)
-  COMMIT=$(echo $GIT_DAYS | tr " " "\n" | grep "$DATE")
+  DAY=`date --date="-${d} days" +%u`
+  DATE=`date --date="-${d} days" +%Y-%m-%d`
+  COMMIT=`echo $GIT_DAYS | tr " " "\n" | grep "$DATE"`
 
   if [ "$COMMIT" = "$DATE" ]
   then
@@ -32,6 +33,9 @@ do
   else
     STREAK=□
   fi
+
+  [[ $DAY -eq 6 ]] && BAR=${BAR}' '
+  [[ $DAY -eq 1 ]] && BAR=${BAR}' '
 
   BAR=${BAR}${STREAK}
 done

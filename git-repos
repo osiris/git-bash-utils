@@ -73,16 +73,16 @@ if [ -z $FILTER ]
 then
   if [ -z $EXCLUDE ]
   then
-    GIT_REPOS=$(grep -v ^# $REPOS)
+    GIT_REPOS=`grep -v ^# $REPOS`
   else
-    GIT_REPOS=$(grep -v ^# $REPOS | grep -v $EXCLUDE)
+    GIT_REPOS=`grep -v ^# $REPOS | grep -v $EXCLUDE`
   fi
 else
   if [ -z $EXCLUDE ]
   then
-    GIT_REPOS=$(egrep "$FILTER" $REPOS | grep -v ^#)
+    GIT_REPOS=`egrep "$FILTER" $REPOS | grep -v ^#`
   else
-    GIT_REPOS=$(egrep "$FILTER" $REPOS | grep -v ^# | egrep -v $EXCLUDE)
+    GIT_REPOS=`egrep "$FILTER" $REPOS | grep -v ^# | egrep -v $EXCLUDE`
   fi
 fi
 
@@ -90,10 +90,10 @@ fi
 echo "$GIT_REPOS" | sort | while read R
 do
   cd ~
-  DIR=$(echo $R | awk '{print $1}')
-  GIT=$(echo $R | awk '{print $2}')
+  DIR=`echo $R | awk '{print $1}'`
+  GIT=`echo $R | awk '{print $2}'`
 
-  echo ${white}
+  echo -n ${white}
 
   if [ ! -d $DIR ]
   then
@@ -107,11 +107,10 @@ do
     fi
   fi
 
-
   if [ $PUSH -eq 1 ]
   then
     cd $DIR
-    HTTPS=$(egrep -o "$DIR\ +https" $REPOS | awk '{print $2}')
+    HTTPS=`egrep -o "$DIR\ +https" $REPOS | awk '{print $2}'`
     [ ! "$HTTPS" = "https" ] && git push -q 2>/dev/null 1>/dev/null
   fi
   
@@ -129,12 +128,11 @@ do
     S=${red}'✖'
   fi
 
-  cd ~ && cd $DIR && BAR=$(git-streak)
+  cd ~ && cd $DIR && BAR=`git-streak`
 
   if [ $SHOW_TIME -eq 1 ]
   then
-      HOURS=$(git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}')
-
+      HOURS=`git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}'`
       printf " %s%s %s %7s %s\n" $S $yellow $BAR $HOURS $DIR
   else
       echo ' '${S}${yellow}' '${BAR}' '${DIR}
@@ -142,7 +140,7 @@ do
 
   if [ $SHOW_LOG -eq 1 ]
   then
-    LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
+    LOG=`git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g`
     echo -e "${white}\t  "$LOG
   fi
 done
