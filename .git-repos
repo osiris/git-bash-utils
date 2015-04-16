@@ -32,6 +32,7 @@ elastic-mongodb         https://github.com/diegows/elastic-mongodb
 faraday                 https://github.com/infobyte/faraday
 flexget-dev             https://github.com/Flexget/Flexget
 gitflow                 https://github.com/nvie/gitflow
+git-flow-completion     https://github.com/bobthecow/git-flow-completion
 librevpn                https://github.com/LibreVPN/librevpn
 maildir-deduplicate     https://github.com/kdeldycke/maildir-deduplicate
 nbwmon                  https://github.com/causes-/nbwmon
