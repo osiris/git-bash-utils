@@ -11,13 +11,18 @@ multiboot               github:osiris/multiboot
 org-bash-utils          github:osiris/org-bash-utils
 org-mode-doc-es         github:osiris/org-mode-doc-es
 pcap2dot                github:osiris/pcap2dot
+# forks
 traducciones            github:osiris/traducciones
+eventoL                 github:osiris/eventoL
 # gcoop
 letras_viajeras         github:gcoop-libre/letras_viajeras
 plan-b                  github:gcoop-libre/plan-b
 sugar-graphviz          github:gcoop-libre/sugar-graphviz
 sugarce-add-ons         github:gcoop-libre/SugarCE-Add-ons
+phpCAS                  https://github.com/Jasig/phpCAS
+SugarCRM-CAS            github:gcoop-libre/SugarCRM-CAS.git
 # útil
+fu                      https://github.com/samirahmed/fu
 cozy                    https://github.com/cozy/cozy-setup
 csvkit                  https://github.com/onyxfish/csvkit
 data_hacks              https://github.com/bitly/data_hacks
@@ -59,6 +64,7 @@ vim-arduino             https://github.com/tclem/vim-arduino
 vim-arduino-ino         https://github.com/jplaut/vim-arduino-ino
 vim-arduino-snippets    https://github.com/sudar/vim-arduino-snippets
 vim-arduino-syntax      https://github.com/sudar/vim-arduino-syntax
+circuits_cc             https://github.com/shaos/circuits_cc
 # org-mode + emacs
 Highlight-Indentation   https://github.com/antonj/Highlight-Indentation-for-Emacs.git
 anything-config         git://repo.or.cz/anything-config.git
