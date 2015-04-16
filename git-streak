@@ -20,6 +20,35 @@ TODAY=`date +%Y-%m-%d`
 LIMIT=`date --date='-30 days' +%Y-%m-%d`
 GIT_DAYS=`git log --date=iso --since $LIMIT | grep Date | awk '{print $2}' | sort -u`
 BAR=''
+LAST_COMMIT=0
+LAST_NO_COMMIT=0
+
+green='[01;32m'
+red='[01;31m'
+white='[0m'
+
+bar ()
+{
+	t=$2
+	n=$1
+	p=`echo "scale=2;($n/$t)*100" | bc`
+	i=`echo $p | cut -d\. -f1`
+	m=$(($i/5))
+
+	if [ $i -eq 0 ]
+	then
+		exit
+	fi
+	if [ $i -lt 2 ]
+	then
+		printf '▌'
+		exit
+	fi
+    for ((i=1; i<=$m; i++))
+    do
+        echo -n '█'
+    done
+}
 
 for d in `seq 30 -1 0`
 do
@@ -29,9 +58,11 @@ do
 
   if [ "$COMMIT" = "$DATE" ]
   then
-    STREAK=▣
+    STREAK=$green▣
+    let LAST_COMMIT++
   else
-    STREAK=□
+    STREAK=$white□
+    let LAST_NO_COMMIT++
   fi
 
   [[ $DAY -eq 6 ]] && BAR=${BAR}' '
@@ -39,6 +70,10 @@ do
 
   BAR=${BAR}${STREAK}
 done
-
-echo $BAR
+let LAST_NO_COMMIT--
+BAR_COMMIT=`bar $LAST_COMMIT 30`
+BAR_NO_COMMIT=`bar $LAST_NO_COMMIT 30` 
+BAR_TREND=$BAR_COMMIT$red$BAR_NO_COMMIT
+TREND=`printf "%02d %s %02d" $LAST_COMMIT $BAR_TREND $LAST_NO_COMMIT`
+echo $BAR$green $TREND $white
 
