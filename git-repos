@@ -30,6 +30,7 @@ SHOW_LOG=0
 SHOW_TIME=0
 FILTER=''
 EXCLUDE=''
+ZERO_COMMITS=0
 
 test -e $REPOS
 OK=$?
@@ -40,7 +41,7 @@ then
   exit 1
 fi
 
-while getopts "cf:gltsx:" OPTION
+while getopts "cf:gltsx:z" OPTION
 do
   case $OPTION in
     c)
@@ -63,6 +64,9 @@ do
       ;;
     x)
       EXCLUDE=$OPTARG
+      ;;
+    z)
+      ZERO_COMMITS=1
       ;;
   esac
 done
@@ -129,6 +133,16 @@ do
   fi
 
   cd ~ && cd $DIR && BAR=`git-streak`
+
+  NO_COMMITS=`echo "$BAR" | grep -o "00"`
+
+  if [ "$ZERO_COMMITS" -eq 0 ]
+  then
+    if [ "$NO_COMMITS" == "00" ]
+    then
+        continue
+    fi
+  fi
 
   if [ $SHOW_TIME -eq 1 ]
   then
