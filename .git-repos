@@ -23,6 +23,7 @@ plan-b                  github:gcoop-libre/plan-b
 sugar-graphviz          github:gcoop-libre/sugar-graphviz
 sugarce-add-ons         github:gcoop-libre/SugarCE-Add-ons
 # útil
+advanced-ssh-config     https://github.com/moul/advanced-ssh-config
 clusterize              https://github.com/NeXTs/Clusterize.js
 cozy                    https://github.com/cozy/cozy-setup
 csvkit                  https://github.com/onyxfish/csvkit
@@ -36,6 +37,7 @@ fu                      https://github.com/samirahmed/fu
 git-flow-completion     https://github.com/bobthecow/git-flow-completion
 gitflow                 https://github.com/nvie/gitflow
 graudit                 https://github.com/wireghoul/graudit/
+keychain				https://github.com/funtoo/keychain
 librevpn                https://github.com/LibreVPN/librevpn
 maildir-deduplicate     https://github.com/kdeldycke/maildir-deduplicate
 nbwmon                  https://github.com/causes-/nbwmon
@@ -103,3 +105,39 @@ rainbow-mode            https://github.com/emacsmirror/rainbow-mode.git
 s.el                    https://github.com/magnars/s.el.git
 worg                    git://orgmode.org/worg.git
 yasni                   https://github.com/capitaomorte/yasnippet
+#
+asmttpd                 https://github.com/nemasu/asmttpd
+snake                   https://github.com/tancredi/python-console-snake
+mirobot-pcb             https://github.com/bjpirt/mirobot-pcb
+# bash
+awesome-shell           https://github.com/alebcay/awesome-shell
+base16-shell            https://github.com/chriskempson/base16-shell
+bash-slugify            https://github.com/benlinton/bash-slugify
+cv                      https://github.com/Xfennec/cv
+fasd                    https://github.com/clvv/fasd
+hhighlighter            https://github.com/paoloantinori/hhighlighter
+lsp                     https://github.com/dborzov/lsp
+mysql-colorize.bash     https://github.com/horosgrisa/mysql-colorize.bash
+quick-secure            https://github.com/marshyski/quick-secure
+repren                  https://github.com/jlevy/repren
+shipit                  https://github.com/sapegin/shipit
+the-art-of-command-line https://github.com/jlevy/the-art-of-command-line
+the_silver_searcher     https://github.com/ggreer/the_silver_searcher
+v                       https://github.com/rupa/v
+z                       https://github.com/rupa/z
+git-extras              https://github.com/tj/git-extras
+ngincat                 https://github.com/jaburns/ngincat
+beets                   https://github.com/sampsyo/beets
+jq                      https://github.com/stedolan/jq
+transfer.sh             https://github.com/dutchcoders/transfer.sh/
+#
+metrics-graphics        https://github.com/mozilla/metrics-graphics
+statsd                  https://github.com/etsy/statsd
+brubeck                 https://github.com/github/brubeck
+# reprap
+marlin                  https://github.com/MarlinFirmware/Marlin
+openscad.vim            https://github.com/vim-scripts/openscad.vim
+printrun                https://github.com/kliment/Printrun
+repetier-host           https://github.com/repetier/Repetier-Host
+slic3r                  https://github.com/alexrj/Slic3r.git
+vim-openscad            https://github.com/sirtaj/vim-openscad
