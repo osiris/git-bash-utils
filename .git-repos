@@ -44,6 +44,7 @@ nbwmon                  https://github.com/causes-/nbwmon
 parse_bash_history      https://github:swooingfish/parse_bash_history
 parsley                 https://github.com/fizx/parsley
 password-store          http://git.zx2c4.com/password-store
+qtpass                  https://github.com/IJHack/qtpass
 perf-tools              https://github.com/brendangregg/perf-tools
 shellcheck              https://github.com/koalaman/shellcheck
 sshrc                   https://github.com/Russell91/sshrc
