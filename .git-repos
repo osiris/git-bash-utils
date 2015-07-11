@@ -142,3 +142,6 @@ printrun                https://github.com/kliment/Printrun
 repetier-host           https://github.com/repetier/Repetier-Host
 slic3r                  https://github.com/alexrj/Slic3r.git
 vim-openscad            https://github.com/sirtaj/vim-openscad
+ispconfig3-cli          https://github.com/pemedina/ISPconfig3-cli
+# firefox
+firefox-debloat         https://github.com/amq/firefox-debloat
