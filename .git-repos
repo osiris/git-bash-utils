@@ -43,7 +43,10 @@ parse_bash_history      https://github:swooingfish/parse_bash_history
 parsley                 https://github.com/fizx/parsley
 password-store          http://git.zx2c4.com/password-store
 qtpass                  https://github.com/IJHack/qtpass
+pgcli                   https://github.com/dbcli/pgcli
+postgrest               https://github.com/begriffs/postgrest
 perf-tools              https://github.com/brendangregg/perf-tools
+scancode-toolkit        https://github.com/nexB/scancode-toolkit/
 shellcheck              https://github.com/koalaman/shellcheck
 sshrc                   https://github.com/Russell91/sshrc
 syncthing               https://github.com/syncthing/syncthing
@@ -113,12 +116,14 @@ asmttpd                 https://github.com/nemasu/asmttpd
 snake                   https://github.com/tancredi/python-console-snake
 mirobot-pcb             https://github.com/bjpirt/mirobot-pcb
 # bash
+.qfc                    https://github.com/pindexis/qfc
 awesome-shell           https://github.com/alebcay/awesome-shell
 base16-shell            https://github.com/chriskempson/base16-shell
 bash-slugify            https://github.com/benlinton/bash-slugify
 beets                   https://github.com/sampsyo/beets
 bocker                  https://github.com/p8952/bocker
 cv                      https://github.com/Xfennec/cv
+emojify                 https://github.com/mrowa44/emojify
 fasd                    https://github.com/clvv/fasd
 git-extras              https://github.com/tj/git-extras
 hhighlighter            https://github.com/paoloantinori/hhighlighter
