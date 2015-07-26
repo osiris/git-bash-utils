@@ -51,6 +51,7 @@ shellcheck              https://github.com/koalaman/shellcheck
 sshrc                   https://github.com/Russell91/sshrc
 syncthing               https://github.com/syncthing/syncthing
 syntastic               https://github.com/scrooloose/syntastic
+tomb                    https://github.com/dyne/Tomb
 zindex                  https://github.com/mattgodbolt/zindex
 # git
 git-flow-completion     https://github.com/bobthecow/git-flow-completion
