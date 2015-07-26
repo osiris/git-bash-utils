@@ -163,3 +163,7 @@ tmux-fpp                https://github.com/tmux-plugins/tmux-fpp
 tmux-logging            https://github.com/tmux-plugins/tmux-logging
 tmux-open               https://github.com/tmux-plugins/tmux-open
 vim-tmux                https://github.com/tmux-plugins/vim-tmux
+# openstack
+freezer                 https://github.com/stackforge/freezer
+grizzly                 https://github.com/jedipunkz/openstack_grizzly_install
+raksha                  https://github.com/DPaaS-Raksha/Raksha
