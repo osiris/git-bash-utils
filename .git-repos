@@ -12,6 +12,9 @@ multiboot               github:osiris/multiboot
 org-bash-utils          github:osiris/org-bash-utils
 org-mode-doc-es         github:osiris/org-mode-doc-es
 pcap2dot                github:osiris/pcap2dot
+# fonts
+font_compare            https://github.com/s9w/font_compare
+monoOne                 https://github.com/madmalik/monoOne
 # forks
 traducciones            github:osiris/traducciones
 eventoL                 github:osiris/eventoL
@@ -43,6 +46,7 @@ parse_bash_history      https://github:swooingfish/parse_bash_history
 parsley                 https://github.com/fizx/parsley
 password-store          http://git.zx2c4.com/password-store
 qtpass                  https://github.com/IJHack/qtpass
+mycli                   https://github.com/dbcli/mycli
 pgcli                   https://github.com/dbcli/pgcli
 postgrest               https://github.com/begriffs/postgrest
 perf-tools              https://github.com/brendangregg/perf-tools
