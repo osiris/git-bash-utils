@@ -65,6 +65,7 @@ spaceman-diff           github:osiris/spaceman-diff
 ansible                 https://github.com/ansible/ansible
 ansible-examples        https://github.com/ansible/ansible-examples
 ansible-mmoya           https://github.com/mmoya/ansible-playbooks
+ansible-monkeysphere    https://github.com/debops/ansible-monkeysphere
 ansible-openvz          https://github.com/rivik/ansible-openvz
 ansible-playbook-pve    https://github.com/dpausp/ansible-playbook-pve
 ansible-raymiiorg       https://github.com/RaymiiOrg/ansible
@@ -140,6 +141,7 @@ quick-secure            https://github.com/marshyski/quick-secure
 repren                  https://github.com/jlevy/repren
 roundup                 https://github.com/bmizerany/roundup
 shipit                  https://github.com/sapegin/shipit
+spark                   https://github.com/holman/spark
 the-art-of-command-line https://github.com/jlevy/the-art-of-command-line
 the_silver_searcher     https://github.com/ggreer/the_silver_searcher
 transfer.sh             https://github.com/dutchcoders/transfer.sh/
@@ -167,6 +169,8 @@ tmux-fpp                https://github.com/tmux-plugins/tmux-fpp
 tmux-logging            https://github.com/tmux-plugins/tmux-logging
 tmux-open               https://github.com/tmux-plugins/tmux-open
 vim-tmux                https://github.com/tmux-plugins/vim-tmux
+# vim
+vim-multiple-cursors    https://github.com/terryma/vim-multiple-cursors
 # openstack
 freezer                 https://github.com/stackforge/freezer
 grizzly                 https://github.com/jedipunkz/openstack_grizzly_install
