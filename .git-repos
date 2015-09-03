@@ -175,3 +175,10 @@ vim-multiple-cursors    https://github.com/terryma/vim-multiple-cursors
 freezer                 https://github.com/stackforge/freezer
 grizzly                 https://github.com/jedipunkz/openstack_grizzly_install
 raksha                  https://github.com/DPaaS-Raksha/Raksha
+salt-bootstrap          https://github.com/saltstack/salt-bootstrap
+# drupal
+drush                   https://github.com/drush-ops/drush.git
+# sysadmin
+genhost                 https://github.com/elasticdog/genhost
+monitorix-board         https://github.com/JaimeObregon/monitorix-board
+speed-test              https://github.com/sindresorhus/speed-test
