@@ -19,7 +19,7 @@ monoOne                 https://github.com/madmalik/monoOne
 traducciones            github:osiris/traducciones
 eventoL                 github:osiris/eventoL
 # gcoop
-SugarCRM-CAS            github:gcoop-libre/SugarCRM-CAS.git
+SugarCRM-CAS            github:gcoop-libre/SugarCRM-CAS
 letras_viajeras         github:gcoop-libre/letras_viajeras
 phpCAS                  https://github.com/Jasig/phpCAS
 plan-b                  github:gcoop-libre/plan-b
@@ -182,3 +182,5 @@ drush                   https://github.com/drush-ops/drush.git
 genhost                 https://github.com/elasticdog/genhost
 monitorix-board         https://github.com/JaimeObregon/monitorix-board
 speed-test              https://github.com/sindresorhus/speed-test
+vim-config              https://github.com/stephpy/vim-config
+guff                    https://github.com/silentbicycle/guff
