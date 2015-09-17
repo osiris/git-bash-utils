@@ -179,6 +179,8 @@ salt-bootstrap          https://github.com/saltstack/salt-bootstrap
 # drupal
 drush                   https://github.com/drush-ops/drush.git
 # sysadmin
+openssh                 git://anongit.mindrot.org/openssh.git
+gnupg                   git://git.gnupg.org/gnupg.git
 genhost                 https://github.com/elasticdog/genhost
 monitorix-board         https://github.com/JaimeObregon/monitorix-board
 speed-test              https://github.com/sindresorhus/speed-test
