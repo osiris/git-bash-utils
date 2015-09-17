@@ -179,10 +179,11 @@ salt-bootstrap          https://github.com/saltstack/salt-bootstrap
 # drupal
 drush                   https://github.com/drush-ops/drush.git
 # sysadmin
-openssh                 git://anongit.mindrot.org/openssh.git
-gnupg                   git://git.gnupg.org/gnupg.git
 genhost                 https://github.com/elasticdog/genhost
+git-remote-gcrypt       https://github.com/bluss/git-remote-gcrypt
+gnupg                   git://git.gnupg.org/gnupg.git
+guff                    https://github.com/silentbicycle/guff
 monitorix-board         https://github.com/JaimeObregon/monitorix-board
+openssh                 git://anongit.mindrot.org/openssh.git
 speed-test              https://github.com/sindresorhus/speed-test
 vim-config              https://github.com/stephpy/vim-config
-guff                    https://github.com/silentbicycle/guff
