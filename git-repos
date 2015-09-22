@@ -117,7 +117,7 @@ do
     HTTPS=`egrep -o "$DIR\ +https" $REPOS | awk '{print $2}'`
     [ ! "$HTTPS" = "https" ] && git push -q 2>/dev/null 1>/dev/null
   fi
-  
+
   if [ $PULL -eq 1 ]
   then
     cd ~ && cd $DIR && git pull -q 2>/dev/null 1>/dev/null
@@ -140,7 +140,10 @@ do
   then
     if [ "$NO_COMMITS" == "00" ]
     then
-        continue
+        if [ "$E" -eq 0 ]
+        then
+          continue
+        fi
     fi
   fi
 
