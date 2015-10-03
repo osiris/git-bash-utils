@@ -26,11 +26,18 @@ yellow='[01;33m'
 CLONE=0
 PUSH=0
 PULL=0
+DELETE=0
 SHOW_LOG=0
 SHOW_TIME=0
 FILTER=''
 EXCLUDE=''
 ZERO_COMMITS=0
+
+repo_error ()
+{
+  S=${red}'✖'
+  echo ' '${S}${yellow} ${DIR} ${red}$1' '${green}
+}
 
 test -e $REPOS
 OK=$?
@@ -41,11 +48,14 @@ then
   exit 1
 fi
 
-while getopts "cf:gltsx:z" OPTION
+while getopts "cdf:gltsx:z" OPTION
 do
   case $OPTION in
     c)
       CLONE=1
+      ;;
+    d)
+      DELETE=1
       ;;
     f)
       FILTER=$OPTARG
@@ -99,16 +109,27 @@ do
 
   echo -n ${white}
 
+  if [ $DELETE -eq 1 ]
+  then
+      mv -vi "$DIR" "$DIR.bak"
+  fi
+
   if [ ! -d $DIR ]
   then
     if [ $CLONE -eq 1 ]
     then
       git clone $GIT $DIR
+      ERROR=`echo $?`
     else
-      S=${red}'✖'
-      echo ' '${S}${yellow} ${DIR} ${red}'NOT FOUND'${green}
+      repo_error 'NOT FOUND REPO. TRY WITH -c'
       continue
     fi
+  fi
+
+  if [ ! -d $DIR/.git ]
+  then
+      repo_error 'NOT VALID GIT REPO. TRY WITH -c'
+      continue
   fi
 
   if [ $PUSH -eq 1 ]
@@ -121,6 +142,20 @@ do
   if [ $PULL -eq 1 ]
   then
     cd ~ && cd $DIR && git pull -q 2>/dev/null 1>/dev/null
+    ERROR=`echo $?`
+
+    if [ $ERROR -eq 128 ]
+    then
+      if [ $CLONE -eq 1 ]
+      then
+        cd ~
+        mv $DIR $DIR.bak
+        git clone $GIT $DIR
+      else
+        repo_error 'NOT VALID GIT REPO. TRY WITH -c'
+        continue
+      fi
+    fi
   fi
 
   E=$(echo $?)
