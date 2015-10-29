@@ -77,6 +77,7 @@ ansible-playbook-pve    https://github.com/dpausp/ansible-playbook-pve
 ansible-raymiiorg       https://github.com/RaymiiOrg/ansible
 ansible-tuto            https://github.com/leucos/ansible-tuto
 debops                  https://github.com/debops/debops
+debops-playbooks        https://github.com/debops/debops-playbooks
 hetzner-scripts         https://github.com/wiebew/hetzner-scripts
 ispconfig_install       https://github.com/wiebew/ispconfig_install
 powerdns-ansible        https://github.com/akagisho/powerdns-ansible
@@ -185,6 +186,7 @@ vim-multiple-cursors    https://github.com/terryma/vim-multiple-cursors
 # openstack
 freezer                 https://github.com/stackforge/freezer
 grizzly                 https://github.com/jedipunkz/openstack_grizzly_install
+openstack-debian-image  https://github.com/marekruzicka/openstack-debian-image
 raksha                  https://github.com/DPaaS-Raksha/Raksha
 # drupal
 drush                   https://github.com/drush-ops/drush.git
