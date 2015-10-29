@@ -66,6 +66,7 @@ spaceman-diff           github:osiris/spaceman-diff
 ansible                 https://github.com/ansible/ansible
 ansible-drupal-lamp     https://github.com/a-fro/ansible-drupal-lamp
 ansible-examples        https://github.com/ansible/ansible-examples
+ansible-galera          https://github.com/CaptTofu/ansible-galera
 ansible-grafana         https://github.com/bobrik/ansible-grafana
 ansible-graphite        https://github.com/dmichel1/ansible-graphite
 ansible-graphite        https://github.com/jpmens/ansible-graphite
