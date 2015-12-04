@@ -78,9 +78,9 @@ ansible-openvz          https://github.com/rivik/ansible-openvz
 ansible-os-hardening    https://github.com/hardening-io/ansible-os-hardening
 ansible-playbook-pve    https://github.com/dpausp/ansible-playbook-pve
 ansible-raymiiorg       https://github.com/RaymiiOrg/ansible
-ansible-role-firewall   https://github.com/mikegleasonjr/ansible-role-firewall
 ansible-suitecrm        https://github.com/Dhar/ansible-suitecrm
 ansible-tuto            https://github.com/leucos/ansible-tuto
+ansible-role-firewall   https://github.com/mikegleasonjr/ansible-role-firewall
 debops                  https://github.com/debops/debops
 debops-playbooks        https://github.com/debops/debops-playbooks
 hetzner-scripts         https://github.com/wiebew/hetzner-scripts
@@ -153,6 +153,7 @@ fasd                    https://github.com/clvv/fasd
 git-extras              https://github.com/tj/git-extras
 hhighlighter            https://github.com/paoloantinori/hhighlighter
 jq                      https://github.com/stedolan/jq
+lolcat                  https://github.com/tehmaze/lolcat
 lsp                     https://github.com/dborzov/lsp
 mysql-colorize.bash     https://github.com/horosgrisa/mysql-colorize.bash
 ngincat                 https://github.com/jaburns/ngincat
@@ -188,6 +189,7 @@ tmux-open               https://github.com/tmux-plugins/tmux-open
 tpm                     https://github.com/tmux-plugins/tpm
 vim-tmux                https://github.com/tmux-plugins/vim-tmux
 # vim
+ag.vim                  https://github.com/rking/ag.vim
 vim-multiple-cursors    https://github.com/terryma/vim-multiple-cursors
 # openstack
 freezer                 https://github.com/stackforge/freezer
@@ -226,18 +228,27 @@ varnish-formula         https://github.com/saltstack-formulas/varnish-formula
 vim-formula             https://github.com/saltstack-formulas/vim-formula
 # sysadmin
 ansible-grafana         https://github.com/bobrik/ansible-grafana.git
+canything               https://github.com/keiji0/canything
+dateutils               https://github.com/hroptatyr/dateutils
+diagram                 https://github.com/tehmaze/diagram
+fpp                     https://github.com/facebook/PathPicker
+fzf                     https://github.com/junegunn/fzf
 genhost                 https://github.com/elasticdog/genhost
 git-remote-gcrypt       https://github.com/bluss/git-remote-gcrypt
 glances                 https://github.com/nicolargo/glances
 gnupg                   git://git.gnupg.org/gnupg
 goaccess                https://github.com/allinurl/goaccess
 guff                    https://github.com/silentbicycle/guff
+httpie                  https://github.com/jkbrzt/httpie
 ispconfig3-cli          https://github.com/pemedina/ISPconfig3-cli
 ispconfig_setup         https://github.com/servisys/ispconfig_setup
 linkchecker             https://github.com/wummel/linkchecker
 monitorix-board         https://github.com/JaimeObregon/monitorix-board
 openssh                 git://anongit.mindrot.org/openssh
+percol                  https://github.com/mooz/percol
+shyaml                  https://github.com/0k/shyaml
 slurm                   https://github.com/mattthias/slurm
 speed-test              https://github.com/sindresorhus/speed-test
+sysdig                  https://github.com/draios/sysdig
+the_silver_searcher     https://github.com/ggreer/the_silver_searcher
 vim-config              https://github.com/stephpy/vim-config
-
