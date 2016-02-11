@@ -20,6 +20,7 @@ traducciones            github:osiris/traducciones
 eventoL                 github:osiris/eventoL
 # gcoop
 SugarCRM-CAS            github:gcoop-libre/SugarCRM-CAS
+codigos-cooperativos    github:gcoop-libre/codigos-cooperativos
 letras_viajeras         github:gcoop-libre/letras_viajeras
 multi-ssh-config        github:gcoop-libre/multi-ssh-config
 phpCAS                  https://github.com/Jasig/phpCAS
@@ -70,6 +71,7 @@ ansible-galera          https://github.com/CaptTofu/ansible-galera
 ansible-grafana         https://github.com/bobrik/ansible-grafana
 ansible-graphite        https://github.com/dmichel1/ansible-graphite
 ansible-graphite        https://github.com/jpmens/ansible-graphite
+ansible-graphite-statsd https://github.com/gmontard/grafana-graphite-statsd-ansible-vagrant
 ansible-mariadb         https://github.com/alexey-medvedchikov/ansible-galera
 ansible-mmoya           https://github.com/mmoya/ansible-playbooks
 ansible-monit           https://github.com/debops/ansible-monit
@@ -81,6 +83,7 @@ ansible-raymiiorg       https://github.com/RaymiiOrg/ansible
 ansible-suitecrm        https://github.com/Dhar/ansible-suitecrm
 ansible-tuto            https://github.com/leucos/ansible-tuto
 ansible-role-firewall   https://github.com/mikegleasonjr/ansible-role-firewall
+vim-ansible-yaml        https://github.com/chase/vim-ansible-yaml
 debops                  https://github.com/debops/debops
 debops-playbooks        https://github.com/debops/debops-playbooks
 hetzner-scripts         https://github.com/wiebew/hetzner-scripts
@@ -152,6 +155,7 @@ emojify                 https://github.com/mrowa44/emojify
 fasd                    https://github.com/clvv/fasd
 git-extras              https://github.com/tj/git-extras
 hhighlighter            https://github.com/paoloantinori/hhighlighter
+homeshick               https://github.com/andsens/homeshick
 jq                      https://github.com/stedolan/jq
 lolcat                  https://github.com/tehmaze/lolcat
 lsp                     https://github.com/dborzov/lsp
@@ -192,6 +196,7 @@ vim-tmux                https://github.com/tmux-plugins/vim-tmux
 ag.vim                  https://github.com/rking/ag.vim
 vim-multiple-cursors    https://github.com/terryma/vim-multiple-cursors
 # openstack
+collectd-openstack      https://github.com/rochaporto/collectd-openstack
 freezer                 https://github.com/stackforge/freezer
 grizzly                 https://github.com/jedipunkz/openstack_grizzly_install
 openstack-debian-image  https://github.com/marekruzicka/openstack-debian-image
@@ -239,6 +244,7 @@ glances                 https://github.com/nicolargo/glances
 gnupg                   git://git.gnupg.org/gnupg
 goaccess                https://github.com/allinurl/goaccess
 guff                    https://github.com/silentbicycle/guff
+handbook                https://github.com/cryptoparty/handbook
 httpie                  https://github.com/jkbrzt/httpie
 ispconfig3-cli          https://github.com/pemedina/ISPconfig3-cli
 ispconfig_setup         https://github.com/servisys/ispconfig_setup
@@ -253,5 +259,13 @@ sysdig                  https://github.com/draios/sysdig
 the_silver_searcher     https://github.com/ggreer/the_silver_searcher
 vim-config              https://github.com/stephpy/vim-config
 wopr                    https://github.com/yaronn/wopr
+ansible-role-roundcube  https://github.com/marklee77/ansible-role-roundcube
+til                     https://github.com/jbranchaud/til
 bullet_journal          https://github.com/abby-walz/bullet_journal
 taskpaper               https://github.com/davidoc/taskpaper.vim
+# crack
+crackstation-hashdb     https://github.com/defuse/crackstation-hashdb
+dictclean               https://github.com/arex1337/dictclean
+pack                    https://github.com/iphelix/pack
+passpal                 https://github.com/arex1337/Passpal
+unix-crypt              https://github.com/mogest/unix-crypt
