@@ -27,6 +27,7 @@ phpCAS                  https://github.com/Jasig/phpCAS
 plan-b                  github:gcoop-libre/plan-b
 sugar-graphviz          github:gcoop-libre/sugar-graphviz
 sugarce-add-ons         github:gcoop-libre/SugarCE-Add-ons
+securimage              https://github.com/dapphp/securimage
 # útil
 advanced-ssh-config     https://github.com/moul/advanced-ssh-config
 clusterize              https://github.com/NeXTs/Clusterize.js
@@ -52,6 +53,8 @@ mycli                   https://github.com/dbcli/mycli
 pgcli                   https://github.com/dbcli/pgcli
 postgrest               https://github.com/begriffs/postgrest
 perf-tools              https://github.com/brendangregg/perf-tools
+todo.txt-cli            https://github.com/ginatrapani/todo.txt-cli
+todo.txt-vim            https://github.com/freitass/todo.txt-vim
 scancode-toolkit        https://github.com/nexB/scancode-toolkit/
 shellcheck              https://github.com/koalaman/shellcheck
 sshrc                   https://github.com/Russell91/sshrc
