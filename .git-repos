@@ -245,6 +245,7 @@ uptime-formula          https://github.com/saltstack-formulas/uptime-formula
 varnish-formula         https://github.com/saltstack-formulas/varnish-formula
 vim-formula             https://github.com/saltstack-formulas/vim-formula
 # sysadmin
+random-passwords        https://github.com/Keith-S-Thompson/random-passwords
 ansible-grafana         https://github.com/bobrik/ansible-grafana.git
 canything               https://github.com/keiji0/canything
 dateutils               https://github.com/hroptatyr/dateutils
