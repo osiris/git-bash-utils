@@ -281,6 +281,7 @@ taskpaper               https://github.com/davidoc/taskpaper.vim
 multimonit              https://github.com/desgyz/MultiMonit
 open-m-monit            https://github.com/antoniopuero/open-m-monit
 restrict_ssh            https://github.com/RaymiiOrg/restrict_ssh
+dsniff                  https://github.com/ggreer/dsniff
 # crack
 crackstation-hashdb     https://github.com/defuse/crackstation-hashdb
 dictclean               https://github.com/arex1337/dictclean
