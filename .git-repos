@@ -182,7 +182,7 @@ the_silver_searcher     https://github.com/ggreer/the_silver_searcher
 transfer.sh             https://github.com/dutchcoders/transfer.sh/
 v                       https://github.com/rupa/v
 z                       https://github.com/rupa/z
-#
+# stats
 metrics-graphics        https://github.com/mozilla/metrics-graphics
 statsd                  https://github.com/etsy/statsd
 brubeck                 https://github.com/github/brubeck
@@ -214,6 +214,7 @@ freezer                 https://github.com/stackforge/freezer
 grizzly                 https://github.com/jedipunkz/openstack_grizzly_install
 openstack-debian-image  https://github.com/marekruzicka/openstack-debian-image
 raksha                  https://github.com/DPaaS-Raksha/Raksha
+openstack-ssh           https://github.com/pyama86/openstack-ssh
 # drupal
 drush                   https://github.com/drush-ops/drush
 # salt
@@ -281,6 +282,9 @@ multimonit              https://github.com/desgyz/MultiMonit
 open-m-monit            https://github.com/antoniopuero/open-m-monit
 restrict_ssh            https://github.com/RaymiiOrg/restrict_ssh
 dsniff                  https://github.com/ggreer/dsniff
+masscan                 https://github.com/robertdavidgraham/masscan
+zmap                    https://github.com/zmap/zmap
+gnuplot-colorbrewer     https://github.com/aschn/gnuplot-colorbrewer.git
 # crack
 crackstation-hashdb     https://github.com/defuse/crackstation-hashdb
 dictclean               https://github.com/arex1337/dictclean
