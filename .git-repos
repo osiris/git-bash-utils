@@ -22,6 +22,7 @@ traducciones                            github:osiris/traducciones
 # gcoop
 SugarCRM-CAS                            github:gcoop-libre/SugarCRM-CAS
 ansible-lookup-plugin-pass              https://github.com/gcoop-libre/ansible-lookup-plugin-pass
+gcoop.apache                            github:gcoop-libre/ansible-role-apache
 codigos-cooperativos                    github:gcoop-libre/codigos-cooperativos
 letras_viajeras                         github:gcoop-libre/letras_viajeras
 multi-ssh-config                        github:gcoop-libre/multi-ssh-config
@@ -31,6 +32,7 @@ securimage                              https://github.com/dapphp/securimage
 sugar-graphviz                          github:gcoop-libre/sugar-graphviz
 sugarce-add-ons                         github:gcoop-libre/SugarCE-Add-ons
 # útil
+myrepos                                 git://myrepos.branchable.com/
 advanced-ssh-config                     https://github.com/moul/advanced-ssh-config
 clusterize                              https://github.com/NeXTs/Clusterize.js
 cozy                                    https://github.com/cozy/cozy-setup
@@ -43,13 +45,14 @@ faraday                                 https://github.com/infobyte/faraday
 flexget-dev                             https://github.com/Flexget/Flexget
 fu                                      https://github.com/samirahmed/fu
 graudit                                 https://github.com/wireghoul/graudit/
+htop                                    https://github.com/hishamhm/htop
+htop-ramen                              https://github.com/ramen/htop
 jukebok                                 https://github.com/lociii/jukebox
 keychain				                        https://github.com/funtoo/keychain
 librevpn                                https://github.com/LibreVPN/librevpn
 maildir-deduplicate                     https://github.com/kdeldycke/maildir-deduplicate
 mycli                                   https://github.com/dbcli/mycli
 nbwmon                                  https://github.com/causes-/nbwmon
-parse_bash_history                      https://github:swooingfish/parse_bash_history
 parsley                                 https://github.com/fizx/parsley
 password-store                          http://git.zx2c4.com/password-store
 perf-tools                              https://github.com/brendangregg/perf-tools
@@ -73,6 +76,7 @@ gitflow                                 https://github.com/nvie/gitflow
 spaceman-diff                           github:osiris/spaceman-diff
 # ansible
 ansible                                 https://github.com/ansible/ansible
+ansible-modules-core                    https://github.com/ansible/ansible-modules-core
 ansible-drupal-lamp                     https://github.com/a-fro/ansible-drupal-lamp
 ansible-examples                        https://github.com/ansible/ansible-examples
 ansible-galera                          https://github.com/CaptTofu/ansible-galera
@@ -80,6 +84,7 @@ ansible-grafana                         https://github.com/bobrik/ansible-grafan
 ansible-graphite                        https://github.com/dmichel1/ansible-graphite
 ansible-graphite                        https://github.com/jpmens/ansible-graphite
 ansible-graphite-statsd                 https://github.com/gmontard/grafana-graphite-statsd-ansible-vagrant
+ansible-htop                            https://github.com/Oefenweb/ansible-htop
 ansible-mariadb                         https://github.com/alexey-medvedchikov/ansible-galera
 ansible-mmoya                           https://github.com/mmoya/ansible-playbooks
 ansible-monit                           https://github.com/debops/ansible-monit
@@ -92,6 +97,8 @@ ansible-raymiiorg                       https://github.com/RaymiiOrg/ansible
 ansible-redmine                         https://github.com/volanja/ansible-Redmine
 ansible-role-firewall                   https://github.com/mikegleasonjr/ansible-role-firewall
 ansible-role-mysqlbackup                https://github.com/nleutner/ansible-role-mysqlbackup
+ansible-role-phpmyadmin                 https://github.com/geerlingguy/ansible-role-phpmyadmin
+ansible-role-php                        https://github.com/geerlingguy/ansible-role-php
 ansible-role-varnish                    https://github.com/geerlingguy/ansible-role-varnish
 ansible-suitecrm                        https://github.com/Dhar/ansible-suitecrm
 ansible-tuto                            https://github.com/leucos/ansible-tuto
@@ -103,6 +110,7 @@ ispconfig_install                       https://github.com/wiebew/ispconfig_inst
 powerdns-ansible                        https://github.com/akagisho/powerdns-ansible
 stouts.backup                           https://github.com/Stouts/Stouts.backup
 vagrant-ansible-drupal7                 https://github.com/Webscope/vagrant-ansible-drupal7
+valentinogagliardi.collectd             https://github.com/valentinogagliardi/collectd.git
 vim-ansible-yaml                        https://github.com/chase/vim-ansible-yaml
 # hardening
 ansible-mysql-hardening                 https://github.com/dev-sec/ansible-mysql-hardening
@@ -173,6 +181,7 @@ snake                                   https://github.com/tancredi/python-conso
 awesome-shell                           https://github.com/alebcay/awesome-shell
 base16-shell                            https://github.com/chriskempson/base16-shell
 bash-sensible                           https://github.com/mrzool/bash-sensible
+parse_bash_history                      https://github:swooingfish/parse_bash_history
 bash-slugify                            https://github.com/benlinton/bash-slugify
 beets                                   https://github.com/sampsyo/beets
 bocker                                  https://github.com/p8952/bocker
@@ -224,6 +233,8 @@ ag.vim                                  https://github.com/rking/ag.vim
 dwm                                     https://github.com/spolu/dwm.vim
 vim-monit                               https://github.com/tmatilai/vim-monit
 vim-multiple-cursors                    https://github.com/terryma/vim-multiple-cursors
+vim-session                             https://github.com/xolox/vim-session
+physlock                                https://github.com/muennich/physlock
 # openstack
 collectd-openstack                      https://github.com/rochaporto/collectd-openstack
 freezer                                 https://github.com/stackforge/freezer
