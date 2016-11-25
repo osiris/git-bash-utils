@@ -101,7 +101,6 @@ else
   if [ -z "$EXCLUDE" ]
   then
     GIT_REPOS=$(egrep "$FILTER" "$REPOS" 2>/dev/null | egrep -v "^#" 2>/dev/null)
-    egrep "$FILTER" "$REPOS" | egrep -v "^#" 2>/dev/null
   else
     GIT_REPOS=$(egrep "$FILTER" "$REPOS" | egrep -v "^#" | egrep -v "$EXCLUDE")
   fi
