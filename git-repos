@@ -32,7 +32,7 @@ SHOW_TIME=0
 FILTER=''
 EXCLUDE=''
 ZERO_COMMITS=0
-DIR_GIT="$HOME/git"
+DIR_GIT="$HOME"
 
 repo_error ()
 {
