@@ -39,29 +39,37 @@ bar ()
 	then
 		exit
 	fi
+
 	if [ $i -lt 2 ]
 	then
 		printf '▌'
 		exit
 	fi
-    for ((i=1; i<=$m; i++))
-    do
-        echo -n '█'
-    done
+
+  if  [ "$m" -eq 0 ]
+  then
+    echo -n ' '
+    exit
+  fi
+
+  for ((i=1; i<=m; i++))
+  do
+      echo -n '█'
+  done
 }
 
-for d in `seq 30 -1 0`
+for d in `seq 29 -1 0`
 do
   DAY=`date --date="-${d} days" +%u`
   DATE=`date --date="-${d} days" +%Y-%m-%d`
-  COMMIT=`echo $GIT_DAYS | tr " " "\n" | grep "$DATE"`
+  COMMIT=`echo "$GIT_DAYS" | tr " " "\n" | grep "$DATE"`
 
   if [ "$COMMIT" = "$DATE" ]
   then
-    STREAK=$green▣
+    STREAK="$green▣"
     let LAST_COMMIT++
   else
-    STREAK=$white□
+    STREAK="$white□"
     let LAST_NO_COMMIT++
   fi
 
@@ -70,10 +78,10 @@ do
 
   BAR=${BAR}${STREAK}
 done
-let LAST_NO_COMMIT--
-BAR_COMMIT=`bar $LAST_COMMIT 30`
-BAR_NO_COMMIT=`bar $LAST_NO_COMMIT 30` 
-BAR_TREND=$BAR_COMMIT$red$BAR_NO_COMMIT
-TREND=`printf "%02d %s %02d" $LAST_COMMIT $BAR_TREND $LAST_NO_COMMIT`
-echo $BAR$green $TREND $white
+
+BAR_COMMIT=`bar "$LAST_COMMIT" 30`
+BAR_NO_COMMIT=`bar "$LAST_NO_COMMIT" 30`
+BAR_TREND="$green$BAR_COMMIT$red$BAR_NO_COMMIT"
+TREND=`printf "%02d %s %02d" "$LAST_COMMIT" "$BAR_TREND" "$LAST_NO_COMMIT"`
+echo "$BAR $TREND $white"
 
