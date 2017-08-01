@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-REPOS=$HOME'/.git-repos'
+REPOS="$HOME/.git-repos"
 
 white='[0m'
 green='[01;32m'
@@ -26,6 +26,8 @@ yellow='[01;33m'
 CLONE=0
 PUSH=0
 PULL=0
+TAGS_FETCH=0
+TAGS_PUSH=0
 DELETE=0
 SHOW_LOG=0
 SHOW_TIME=0
@@ -37,21 +39,21 @@ DIR_GIT="$HOME"
 repo_error ()
 {
   S=${red}'✖'
-  echo ' '${S}${yellow} ${DIR} ${red}$1' '${green}
+  printf " %s%s %-36s %s%-13s %s %s\n" "$S" "$yellow" "$REPO_NAME" "$red" "$1" "$green"
 }
 
-test -e $REPOS
-OK=$?
+test -e "$REPOS"
+OK="$?"
 
-if [ $OK -ne 0 ]
+if [ "$OK" -ne 0 ]
 then
-  echo ERROR $REPOS not found
+  echo "ERROR $REPOS not found"
   exit 1
 fi
 
 while getopts "cdD:f:gltsx:z" OPTION
 do
-  case $OPTION in
+  case "$OPTION" in
     c)
       CLONE=1
       ;;
@@ -59,16 +61,22 @@ do
       DELETE=1
       ;;
     D)
-      DIR_GIT=$OPTARG
+      DIR_GIT="$OPTARG"
       ;;
     f)
-      FILTER=$OPTARG
+      FILTER="$OPTARG"
       ;;
     g)
       SHOW_LOG=1
       ;;
     l)
       PULL=1
+      ;;
+    a)
+      TAGS_FETCH=1
+      ;;
+    A)
+      TAGS_PUSH=1
       ;;
     s)
       PUSH=1
@@ -77,7 +85,7 @@ do
       SHOW_TIME=1
       ;;
     x)
-      EXCLUDE=$OPTARG
+      EXCLUDE="$OPTARG"
       ;;
     z)
       ZERO_COMMITS=1
@@ -106,57 +114,78 @@ else
   fi
 fi
 
-echo "$GIT_REPOS" | sort | while read R
+echo "$GIT_REPOS" | sort | while read D GIT
 do
 
-  D=$(echo "$R" | awk '{print $1}')
-  DIR="$DIR_GIT/$D"
+  ABSOLUT=$(echo "$D" | cut -c -1)
 
-  GIT=$(echo "$R" | awk '{print $2}')
+  if [[ "$ABSOLUT" = '/' ]]
+  then
+    DIR="$D"
+  else
+    DIR="$DIR_GIT/$D"
+  fi
 
-  echo -n ${white}
+  REPO_NAME=$(echo "$DIR" | rev | cut -d'/' -f1 | rev)
 
-  if [ "$DELETE" -eq 1 ]
+  echo -n "$white"
+
+  if [[ "$DELETE" -eq 1 ]]
   then
       mv -vi "$DIR" "${DIR}.bak"
   fi
 
-  if [ ! -d "$DIR" ]
+  if [[ ! -d "$DIR" ]]
   then
-    if [ "$CLONE" -eq 1 ]
+    if [[ "$CLONE" -eq 1 ]]
     then
       git clone "$GIT" "$DIR"
-      ERROR=$(echo $?)
+      ERROR="$?"
+      echo "$ERROR"
     else
       repo_error 'NOT FOUND REPO. TRY WITH -c'
       continue
     fi
   fi
 
-  if [ ! -d "$DIR/.git" ]
+  if [[ ! -d "$DIR/.git" ]]
   then
       repo_error 'NOT VALID GIT REPO. TRY WITH -c'
       continue
   fi
 
-  if [ "$PUSH" -eq 1 ]
+  if [[ "$PUSH" -eq 1 ]]
   then
     cd "$DIR"
-    HTTPS=`egrep -o "$DIR.*https" $REPOS | awk '{print $2}' | head -1`
-    [ "$HTTPS" != "https" ] && git push -q 2>/dev/null 1>/dev/null
+    HTTPS=$(egrep -o "$DIR.*https" "$REPOS" | awk '{print $2}' | head -1)
+
+    if [[ "$HTTPS" != "https" ]]
+    then
+      if [[ "$TAGS_PUSH" -eq 1 ]]
+      then
+        git push --tags -q 2>/dev/null 1>/dev/null
+      else
+        git push -q 2>/dev/null 1>/dev/null
+      fi
+    fi
   fi
 
-  if [ $PULL -eq 1 ]
+  if [[ "$TAGS_FETCH" -eq 1 ]]
+  then
+    cd "$DIR" && git fetch --tags 2>/dev/null 1>/dev/null
+  fi
+
+  if [[ "$PULL" -eq 1 ]]
   then
     cd "$DIR" && git pull -q 2>/dev/null 1>/dev/null
-    ERROR=`echo $?`
+    ERROR="$?"
 
-    if [ $ERROR -eq 128 ]
+    if [[ "$ERROR" -eq 128 ]]
     then
-      if [ $CLONE -eq 1 ]
+      if [[ "$CLONE" -eq 1 ]]
       then
         mv "$DIR" "${DIR}.bak"
-        git clone $GIT "$DIR"
+        git clone "$GIT" "$DIR"
       else
         repo_error 'NOT VALID GIT REPO. TRY WITH -c'
         continue
@@ -164,44 +193,52 @@ do
     fi
   fi
 
-  E=$(echo $?)
+  E="$?"
 
-  if [ $E -eq 0 ]
+  if [[ "$E" -eq 0 ]]
   then
     S=${green}'✔'
   else
     S=${red}'✖'
   fi
 
+  LAST_TAG=$(cd "$DIR" && git tag -l --sort=-v:refname | head -1)
+  if [[ ! -z "$LAST_TAG" ]]
+  then
+    REPO_NAME="$yellow$REPO_NAME $white($LAST_TAG)"
+  else
+    REPO_NAME="$yellow$REPO_NAME $white"
+  fi
+
   BAR=$(cd "$DIR" && git-streak)
 
-  NO_COMMITS=`echo "$BAR" | grep -o "00"`
+  NO_COMMITS=$(echo "$BAR" | grep -o "00")
 
-  if [ "$ZERO_COMMITS" -eq 0 ]
+  if [[ "$ZERO_COMMITS" -eq 0 ]]
   then
-    if [ "$NO_COMMITS" == "00" ]
+    if [[ "$NO_COMMITS" == "00" ]]
     then
-        if [ "$E" -eq 0 ]
+        if [[ "$E" -eq 0 ]]
         then
           continue
         fi
     fi
   fi
 
-  if [ $SHOW_TIME -eq 1 ]
+  if [[ "$SHOW_TIME" -eq 1 ]]
   then
-      HOURS=`git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}'`
-      printf " %s%s %s %7s %s\n" $S $yellow $BAR $HOURS "$DIR"
+    HOURS=$(git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}')
+      printf " %s%s %s %-20s %10s %-20s %s\n" "$S" "$yellow" "$BAR" "$LAST_TAG" "$HOURS" "$REPO_NAME" "$DIR"
   else
-      echo ' '${S}${yellow}' '${BAR}' '${DIR}
+      printf " %s %-40s %s %s\n" "$S" "$REPO_NAME" "$BAR" "$DIR"
   fi
 
-  if [ $SHOW_LOG -eq 1 ]
+  if [[ "$SHOW_LOG" -eq 1 ]]
   then
-    LOG=`git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g`
-    echo -e "${white}\t  "$LOG
+    LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
+    echo -e "${white}\t  $LOG"
   fi
 done
 
-echo $white
+echo "$white"
 
