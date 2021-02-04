@@ -28,7 +28,8 @@ alias gd6="git diff HEAD~6 "
 alias gd7="git diff HEAD~7 "
 alias gd8="git diff HEAD~8 "
 alias gd9="git diff HEAD~9 "
-alias gde="git status | grep deleted | awk '{print \$2}'"
+alias gde="git status --porcelain | grep '^ D' | awk '{print \$2}'"
+
 alias gdf="git diff"
 alias gdt="git difftool --tool=vimdiff "
 alias gds="git diff --staged"
@@ -55,6 +56,7 @@ alias glg="git log --topo-order --date=iso --pretty --format=\"%h %ad %ae %s\" |
 alias glh="glg | head"
 alias glo="glg | grep osiris"
 alias glp="git log -p "
+alias glpno="git log -p --name-only"
 
 alias gmb="git status | grep 'both modified' | awk '{print \$4}'"
 alias gmg="git merge --log --no-commit --no-ff"
@@ -77,11 +79,31 @@ alias gsy="git pull && git push"
 
 alias gtf="git fetch --tags"
 alias gtg="git tag"
+alias gtn="git tag -n1"
 alias gtk="gitk"
 alias gtp="git push --tags"
 alias gts="git tag -u 9237D36C"
 alias gtv="git tag -v"
 
+alias gtd="git describe --tags"
 alias gvm="vim -p \$(git status --porcelain | grep ^\ M | cut -c 4-)"
 
 alias gitviz="echo 'digraph git {'>/tmp/git.dot ; git log --pretty='format: %h -> { %p }' | head | sed 's/[0-9a-f]*/\"&\"/g' | sed s/\"\"//g >>/tmp/git.dot; echo '}'>>/tmp/git.dot; cat /tmp/git.dot"
+
+function gga()
+{
+  git grep "$@" $(git rev-list --all)
+}
+
+function gsu()
+{
+  [[ -z "$1" ]] && exit 1
+  git branch --set-upstream-to=origin/$1 $1
+}
+
+function gpat()
+{
+  [[ -z "$1" ]] && exit 1
+  git push --all  "$1"
+  git push --tags "$1"
+}
