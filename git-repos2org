@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+[[ ! -e .git-repos ]] && exit 1
+
+GIT_HEAD='git-head.org'
+GIT_ORG='git.org'
+
+[[ ! -z "$1" ]] && GIT_HEAD="$1"
+[[ ! -z "$2" ]] && GIT_ORG="$2"
+
+[[ -e "$GIT_HEAD" ]] && cat "$GIT_HEAD" > "$GIT_ORG"
+
+TMP0="$(mktemp)"
+
+grep '/' .git-repos | sort > "$TMP0"
+
+MAX="$(awk '{print $1}' .git-repos | rev | cut -d/ -f1 | wc -L)"
+LIMIT1="$((MAX*2+9))"
+LIMIT2="$((MAX+40))"
+
+printf "** git repositories\\n\\n"              >> "$GIT_ORG"
+printf "| %-*s | %10s | %-*s | %-*s |\\n"       \
+  $LIMIT1 '=repo=' '=last tag=' 40 '=activity=' \
+  $LIMIT2 '=remote origins='                     >> "$GIT_ORG"
+
+printf "| %-*s | %10s | %-*s | %-*s |\\n" \
+  $LIMIT1 ' ' ' ' 40 ' '                  \
+  $LIMIT2 '-' | tr ' ' '-'                >> "$GIT_ORG"
+
+while read -r DIR REPO
+do
+
+NAME="$(echo "$DIR" | rev | cut -d/ -f1 | rev)"
+REMOTES="$(git-remote2org "$DIR" | tr '\n' ' ')"
+
+[[    "$REMOTES" =~ origin ]] && continue
+[[ -z "$REMOTES"           ]] && continue
+
+STREAK="$(git-streak "$DIR" | sed 's/^ //g' | sed 's/ $//g')"
+LAST_TAG="$(git-last-tag "$DIR")"
+LINK="[[#$NAME][=$NAME=]]"
+
+printf "| %-*s | %10s | %s | %s |\\n"                  \
+  "$LIMIT1" "$LINK" "$LAST_TAG" "=$STREAK=" "$REMOTES" >> "$GIT_ORG"
+
+done < "$TMP0"
+
+printf "\\n\\n" >> "$GIT_ORG"
+
+while read -r DIR REPO
+do
+
+NAME="$(echo "$DIR" | rev | cut -d/ -f1 | rev)"
+DESC="$DIR/description"
+DESCRIPTION=''
+
+[[ -e "$DESC" ]] && DESCRIPTION="$(cat "$DESC")"
+
+DETAIL=$(cat << EOF
+
+** =$NAME=
+   :PROPERTIES:
+   :CUSTOM_ID: $NAME
+   :END:
+
+   $DESCRIPTION
+
+EOF
+)
+
+echo "$DETAIL" >> "$GIT_ORG"
+
+done < "$TMP0"
