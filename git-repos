@@ -16,12 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-REPOS="$HOME/.git-repos"
-
-white='[0m'
-green='[01;32m'
-red='[01;31m'
-yellow='[01;33m'
+# white='[0m'
+# green='[01;32m'
+# red='[01;31m'
+# yellow='[01;33m'
 
 CLONE=0
 PUSH=0
@@ -34,26 +32,91 @@ SHOW_TIME=0
 FILTER=''
 EXCLUDE=''
 ZERO_COMMITS=0
-DIR_GIT="$HOME"
+
+BIN=$(basename "$0")
+
+function usage()
+{
+cat << EOF
+
+Usage:
+
+  $BIN [options]
+
+Mantain a collection of git repositories using .git-repos defined in
+local directory or in ~/.git-repos
+
+    -c  clone
+    -d  delete
+    -D  redefine directory DIR_GIT, by default use current directory
+    -f  filter repository list
+    -g  show log
+    -l  pull repositories
+    -a  fetch tags
+    -A  push tags
+    -s  push
+    -t  show time
+    -x  exclude
+    -z  dont show repositories without commits (zero commits)
+
+Examples:
+
+  Pull repositories
+
+    $BIN -l
+
+  Clone repositories
+
+    $BIN -c
+
+  Push all repositories
+
+EOF
+exit 0
+}
+
+GIT_CONFIG="$HOME/.git-repos.cfg"
+
+if [[ -e "$GIT_CONFIG" ]]
+then
+
+eval $(sed '/:/!d;/^ *#/d;s/:/ /;' < "$GIT_CONFIG" | while read -r k v
+do
+    str="$k='$v'"
+    echo "$str"
+done)
+
+fi
 
 repo_error ()
 {
-  S=${red}'✖'
+  S="${red}✖"
   printf " %s%s %-36s %s%-13s %s %s\n" "$S" "$yellow" "$REPO_NAME" "$red" "$1" "$green"
 }
 
-test -e "$REPOS"
-OK="$?"
-
-if [ "$OK" -ne 0 ]
-then
-  echo "ERROR $REPOS not found"
+die()
+{
+  printf "\\n%sERROR %s%s\\n" "$red" "$1" "$white"
   exit 1
+}
+
+if [[ -e "$PWD/.git-repos" ]]
+then
+  REPOS="$PWD/.git-repos"
+  DIR_GIT="$PWD"
+else
+  REPOS="$HOME/.git-repos"
+  DIR_GIT="$HOME"
 fi
 
-while getopts "cdD:f:gltsx:z" OPTION
+[[ -e "$REPOS" ]] || die "NOT FOUND $REPOS"
+
+while getopts "AcdD:f:ghltsx:z" OPTION
 do
   case "$OPTION" in
+    A)
+      ANSI=1
+      ;;
     c)
       CLONE=1
       ;;
@@ -68,6 +131,9 @@ do
       ;;
     g)
       SHOW_LOG=1
+      ;;
+    h)
+      usage
       ;;
     l)
       PULL=1
@@ -95,29 +161,42 @@ done
 
 [[ ! -d "$DIR_GIT" ]] && mkdir "$DIR_GIT"
 
+if [[ "$ANSI" -eq 1 ]]
+then
+  white='[0m'
+  green='[01;32m'
+  red='[01;31m'
+  yellow='[01;33m'
+else
+  white=''
+  green=''
+  red=''
+  yellow=''
+fi
+
 echo
 
-if [ -z "$FILTER" ]
+if [[ -z "$FILTER" ]]
 then
-  if [ -z "$EXCLUDE" ]
+  if [[ -z "$EXCLUDE" ]]
   then
-    GIT_REPOS=$(egrep -v "^#" "$REPOS")
+    GIT_REPOS="$(egrep -v "^#" "$REPOS")"
   else
-    GIT_REPOS=$(egrep -v "^#" "$REPOS" | egrep -v "$EXCLUDE")
+    GIT_REPOS="$(egrep -v "^#" "$REPOS" | egrep -v "$EXCLUDE")"
   fi
 else
-  if [ -z "$EXCLUDE" ]
+  if [[ -z "$EXCLUDE" ]]
   then
-    GIT_REPOS=$(egrep "$FILTER" "$REPOS" 2>/dev/null | egrep -v "^#" 2>/dev/null)
+    GIT_REPOS="$(grep -E "$FILTER" "$REPOS" 2>/dev/null | grep -vE "^#" 2>/dev/null)"
   else
-    GIT_REPOS=$(egrep "$FILTER" "$REPOS" | egrep -v "^#" | egrep -v "$EXCLUDE")
+    GIT_REPOS="$(grep -E "$FILTER" "$REPOS" | grep -vE "^#" | grep -v "$EXCLUDE")"
   fi
 fi
 
-echo "$GIT_REPOS" | sort | while read D GIT
+echo "$GIT_REPOS" | sort | while read -r D GIT
 do
 
-  ABSOLUT=$(echo "$D" | cut -c -1)
+  ABSOLUT="$(echo "$D" | cut -c -1)"
 
   if [[ "$ABSOLUT" = '/' ]]
   then
@@ -126,7 +205,7 @@ do
     DIR="$DIR_GIT/$D"
   fi
 
-  REPO_NAME=$(echo "$DIR" | rev | cut -d'/' -f1 | rev)
+  REPO_NAME="$(echo "$DIR" | rev | cut -d'/' -f1 | rev)"
 
   echo -n "$white"
 
@@ -157,7 +236,7 @@ do
   if [[ "$PUSH" -eq 1 ]]
   then
     cd "$DIR"
-    HTTPS=$(egrep -o "$DIR.*https" "$REPOS" | awk '{print $2}' | head -1)
+    HTTPS="$(grep -Eo "$DIR.*https" "$REPOS" | awk '{print $2}' | head -1)"
 
     if [[ "$HTTPS" != "https" ]]
     then
@@ -197,9 +276,9 @@ do
 
   if [[ "$E" -eq 0 ]]
   then
-    S=${green}'✔'
+    S="${green}✔"
   else
-    S=${red}'✖'
+    S="${red}✖"
   fi
 
   LAST_TAG=$(cd "$DIR" && git tag -l --sort=-v:refname | head -1)
@@ -218,19 +297,19 @@ do
   then
     if [[ "$NO_COMMITS" == "00" ]]
     then
-        if [[ "$E" -eq 0 ]]
-        then
-          continue
-        fi
+      if [[ "$E" -eq 0 ]]
+      then
+        continue
+      fi
     fi
   fi
 
   if [[ "$SHOW_TIME" -eq 1 ]]
   then
     HOURS=$(git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}')
-      printf " %s%s %s %-20s %10s %-20s %s\n" "$S" "$yellow" "$BAR" "$LAST_TAG" "$HOURS" "$REPO_NAME" "$DIR"
+    printf " %s%s %s %-20s %10s %-20s %s\n" "$S" "$yellow" "$BAR" "$LAST_TAG" "$HOURS" "$REPO_NAME" "$GIT"
   else
-      printf " %s %-40s %s %s\n" "$S" "$REPO_NAME" "$BAR" "$DIR"
+    printf " %s %-50s %s %s\n" "$S" "$REPO_NAME" "$BAR" "$GIT"
   fi
 
   if [[ "$SHOW_LOG" -eq 1 ]]
