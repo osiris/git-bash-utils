@@ -16,16 +16,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-TODAY=`date +%Y-%m-%d`
-LIMIT=`date --date='-30 days' +%Y-%m-%d`
-GIT_DAYS=`git log --date=iso --since $LIMIT | grep Date | awk '{print $2}' | sort -u`
+[[ ! -z "$1" ]] && cd "$1"
+[[ -d '.git' ]] || exit 1
+
+TODAY="$(date +%Y-%m-%d)"
+LIMIT="$(date --date='-30 days' +%Y-%m-%d)"
+GIT_DAYS="$(git log --date=iso --since $LIMIT 2>/dev/null | grep Date | awk '{print $2}' | sort -u)"
 BAR=''
 LAST_COMMIT=0
 LAST_NO_COMMIT=0
 
-green='[01;32m'
-red='[01;31m'
-white='[0m'
+if [[ "$ANSI" -eq 1 ]]
+then
+  green='[01;32m'
+  red='[01;31m'
+  white='[0m'
+else
+  green=''
+  red=''
+  white=''
+fi
 
 bar ()
 {
@@ -35,18 +45,18 @@ bar ()
 	i=`echo $p | cut -d\. -f1`
 	m=$(($i/5))
 
-	if [ $i -eq 0 ]
+	if [[ "$i" -eq 0 ]]
 	then
 		exit
 	fi
 
-	if [ $i -lt 2 ]
+	if [[ "$i" -lt 2 ]]
 	then
-		printf '▌'
+		printf '_'
 		exit
 	fi
 
-  if  [ "$m" -eq 0 ]
+  if [[ "$m" -eq 0 ]]
   then
     echo -n ' '
     exit
@@ -54,17 +64,17 @@ bar ()
 
   for ((i=1; i<=m; i++))
   do
-      echo -n '█'
+      echo -n 'X'
   done
 }
 
 for d in `seq 29 -1 0`
 do
-  DAY=`date --date="-${d} days" +%u`
-  DATE=`date --date="-${d} days" +%Y-%m-%d`
-  COMMIT=`echo "$GIT_DAYS" | tr " " "\n" | grep "$DATE"`
+  DAY="$(date --date="-${d} days" +%u)"
+  DATE="$(date --date="-${d} days" +%Y-%m-%d)"
+  COMMIT="$(echo "$GIT_DAYS" | tr " " "\n" | grep "$DATE")"
 
-  if [ "$COMMIT" = "$DATE" ]
+  if [[ "$COMMIT" = "$DATE" ]]
   then
     STREAK="$green▣"
     let LAST_COMMIT++
@@ -73,15 +83,12 @@ do
     let LAST_NO_COMMIT++
   fi
 
-  [[ $DAY -eq 6 ]] && BAR=${BAR}' '
-  [[ $DAY -eq 1 ]] && BAR=${BAR}' '
+  [[ "$DAY" -eq 6 ]] && BAR="${BAR} "
+  [[ "$DAY" -eq 1 ]] && BAR="${BAR} "
 
-  BAR=${BAR}${STREAK}
+  BAR="${BAR}${STREAK}"
 done
 
 BAR_COMMIT=`bar "$LAST_COMMIT" 30`
 BAR_NO_COMMIT=`bar "$LAST_NO_COMMIT" 30`
-BAR_TREND="$green$BAR_COMMIT$red$BAR_NO_COMMIT"
-TREND=`printf "%02d %s %02d" "$LAST_COMMIT" "$BAR_TREND" "$LAST_NO_COMMIT"`
-echo "$BAR $TREND $white"
-
+echo "$BAR $white"
