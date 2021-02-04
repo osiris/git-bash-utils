@@ -30,9 +30,10 @@ printf "\n** ChangeLog\n\n" > "$TMP1"
 git log --no-merges --format="  - [[$GIT_URL/%H][=%ci=]] %s" "$FILE" \
   | grep -v 'ChangeLog:' \
   | sed 's/ -0300//g'    \
+  | sed 's/ +0000//g'    \
   | cut -d: -f1,2,4-     >> "$TMP1"
 
-N="$(grep -En '^** ChangeLog$' "$FILE" | cut -d: -f1 | head -1)"
+N="$(grep -En '^\*\* ChangeLog$' "$FILE" | cut -d: -f1 | head -1)"
 
 if [[ "$N" -gt 0 ]]
 then
