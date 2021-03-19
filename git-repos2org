@@ -23,7 +23,7 @@ GIT_ORG='git.org'
 
 [[ ! -z "$1" ]] && GIT_HEAD="$1"
 [[ ! -z "$2" ]] && GIT_ORG="$2"
-
+true > "$GIT_ORG"
 [[ -e "$GIT_HEAD" ]] && cat "$GIT_HEAD" > "$GIT_ORG"
 
 TMP0="$(mktemp)"
@@ -34,30 +34,25 @@ MAX="$(awk '{print $1}' .git-repos | rev | cut -d/ -f1 | wc -L)"
 LIMIT1="$((MAX*2+9))"
 LIMIT2="$((MAX+40))"
 
-printf "** git repositories\\n\\n"              >> "$GIT_ORG"
-printf "| %-*s | %10s | %-*s | %-*s |\\n"       \
-  $LIMIT1 '=repo=' '=last tag=' 40 '=activity=' \
-  $LIMIT2 '=remote origins='                     >> "$GIT_ORG"
+printf "** git repositories\\n\\n"    >> "$GIT_ORG"
+printf "| %-*s | %10s | %6s | %-*s |\\n"    \
+  $LIMIT1 'repo' 'tag' 'time' 40 'activity'  >> "$GIT_ORG"
 
-printf "| %-*s | %10s | %-*s | %-*s |\\n" \
-  $LIMIT1 ' ' ' ' 40 ' '                  \
-  $LIMIT2 '-' | tr ' ' '-'                >> "$GIT_ORG"
+printf "| %-*s | %10s | %6s | %-*s |\\n"    \
+  $LIMIT1 ' ' ' ' ' ' 40 ' ' | tr ' ' '-' >> "$GIT_ORG"
 
 while read -r DIR REPO
 do
 
 NAME="$(echo "$DIR" | rev | cut -d/ -f1 | rev)"
-REMOTES="$(git-remote2org "$DIR" | tr '\n' ' ')"
-
-[[    "$REMOTES" =~ origin ]] && continue
-[[ -z "$REMOTES"           ]] && continue
 
 STREAK="$(git-streak "$DIR" | sed 's/^ //g' | sed 's/ $//g')"
 LAST_TAG="$(git-last-tag "$DIR")"
-LINK="[[#$NAME][=$NAME=]]"
+LINK="[[file:git.org::#$NAME][=$NAME=]]"
+TIME="$(git-log-timesum "$DIR")"
 
-printf "| %-*s | %10s | %s | %s |\\n"                  \
-  "$LIMIT1" "$LINK" "$LAST_TAG" "=$STREAK=" "$REMOTES" >> "$GIT_ORG"
+printf "| %-*s | %10s | %6s | %s |\\n"            \
+  "$LIMIT1" "$LINK" "$LAST_TAG" "$TIME" "=$STREAK=" >> "$GIT_ORG"
 
 done < "$TMP0"
 
@@ -67,10 +62,15 @@ while read -r DIR REPO
 do
 
 NAME="$(echo "$DIR" | rev | cut -d/ -f1 | rev)"
-DESC="$DIR/description"
+DESC="$DIR/.description"
 DESCRIPTION=''
 
 [[ -e "$DESC" ]] && DESCRIPTION="$(cat "$DESC")"
+
+REMOTES="$(git-remote2org "$DIR" | sed 's/^\[/\- \[/g')"
+
+[[    "$REMOTES" =~ origin ]] && continue
+[[ -z "$REMOTES"           ]] && continue
 
 DETAIL=$(cat << EOF
 
@@ -80,6 +80,8 @@ DETAIL=$(cat << EOF
    :END:
 
    $DESCRIPTION
+
+   $REMOTES
 
 EOF
 )
