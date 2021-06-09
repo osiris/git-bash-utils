@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-find . -type d -name .git 2>/dev/null | cut -c 3- | while read -r D
+find -L . -type d -name .git 2>/dev/null | cut -c 3- | while read -r D
 do
 
   CFG="$D/config"
