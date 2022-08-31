@@ -16,7 +16,43 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-[[ ! -z "$1" ]] && cd "$1"
-[[ ! -d .git ]] && exit 1
+# shellcheck disable=SC1090
+# shellcheck source=/dev/null
+
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+function usage()
+{
+cat << EOF
+
+## \`$BIN\` return last tag in repo
+
+### Usage:
+
+\`\`\`bash
+
+  $BIN [DIRECTORY]
+
+\`\`\`
+
+### Example:
+
+\`\`\`bash
+
+  $BIN
+
+    v0.2.0
+
+\`\`\`
+
+EOF
+exit 0
+}
+
+[[ "$1" =~ ^[-]+(h|help) ]] && usage
+
+[[ -z "$1" ]]   || DIR="$1"
+cd "$DIR"       || die "INVALID DIRECTORY $DIR"
+[[ -d '.git' ]] || die "INVALID GIT REPOSITORY"
 
 git tag | sort -Vr | head -1
