@@ -1,2 +1,4 @@
-config:
-	./config.sh
+SHELL:=/bin/bash
+
+syntax:
+	@./git-src-check
