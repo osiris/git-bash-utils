@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# shellcheck disable=SC1091
 # shellcheck disable=SC1090
+# shellcheck source=/dev/null
 # shellcheck disable=SC2035
 
 DIR_BIN=$(dirname "$0") && source "$DIR_BIN/git-src-common"
