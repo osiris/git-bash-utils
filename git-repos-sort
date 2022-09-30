@@ -18,18 +18,17 @@
 
 TMP1='/tmp/.git-repos.1.tmp'
 TMP2='/tmp/.git-repos.2.tmp'
-TMP3='/tmp/.git-repos.3.tmp'
 REPOS="$HOME/.git-repos"
 
 [[ -e $PWD/.git-repos ]] && REPOS="$PWD/.git-repos"
 
-> "$TMP1"
-> "$TMP2"
+true > "$TMP1"
+true > "$TMP2"
 
-sort -k1 "$REPOS" | sort -u | while read n r
+sort -k1 "$REPOS" | sort -u | while read -r n r
 do
   dir=$(echo "$n" | grep -o / | head -1)
-  if [ "$dir" = "/" ]
+  if [[ "$dir" = "/" ]]
   then
     printf "%-72s %s\n" "$n" "$r" >> "$TMP1"
   else
