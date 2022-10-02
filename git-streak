@@ -16,12 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-[[ ! -z "$1" ]] && cd "$1"
+[[ -z "$1"   ]] || cd "$1" || exit 1
 [[ -d '.git' ]] || exit 1
 
-TODAY="$(date +%Y-%m-%d)"
 LIMIT="$(date --date='-30 days' +%Y-%m-%d)"
-GIT_DAYS="$(git log --date=iso --since $LIMIT 2>/dev/null | grep Date | awk '{print $2}' | sort -u)"
+GIT_DAYS="$(git log --date=iso --since "$LIMIT" 2>/dev/null | grep Date | awk '{print $2}' | sort -u)"
 BAR=''
 LAST_COMMIT=0
 LAST_NO_COMMIT=0
@@ -29,11 +28,9 @@ LAST_NO_COMMIT=0
 if [[ "$ANSI" -eq 1 ]]
 then
   green='[01;32m'
-  red='[01;31m'
   white='[0m'
 else
   green=''
-  red=''
   white=''
 fi
 
@@ -41,9 +38,9 @@ bar ()
 {
 	t=$2
 	n=$1
-	p=`echo "scale=2;($n/$t)*100" | bc`
-	i=`echo $p | cut -d\. -f1`
-	m=$(($i/5))
+  p="$(echo "scale=2;($n/$t)*100" | bc)"
+  i="$(echo "$p" | cut -d\. -f1=)"
+	m=$((i/5))
 
 	if [[ "$i" -eq 0 ]]
 	then
@@ -68,7 +65,7 @@ bar ()
   done
 }
 
-for d in `seq 29 -1 0`
+for d in $(seq 29 -1 0)
 do
   DAY="$(date --date="-${d} days" +%u)"
   DATE="$(date --date="-${d} days" +%Y-%m-%d)"
@@ -77,10 +74,10 @@ do
   if [[ "$COMMIT" = "$DATE" ]]
   then
     STREAK="$green▣"
-    let LAST_COMMIT++
+    ((LAST_COMMIT++))
   else
     STREAK="$white□"
-    let LAST_NO_COMMIT++
+    ((LAST_NO_COMMIT++))
   fi
 
   [[ "$DAY" -eq 6 ]] && BAR="${BAR} "
@@ -89,6 +86,4 @@ do
   BAR="${BAR}${STREAK}"
 done
 
-BAR_COMMIT=`bar "$LAST_COMMIT" 30`
-BAR_NO_COMMIT=`bar "$LAST_NO_COMMIT" 30`
-echo "$BAR $white"
+echo "$BAR${white}"

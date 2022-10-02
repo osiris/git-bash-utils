@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script comes with ABSOLUTELY NO WARRANTY, use at own risk
-# Copyright (C) 2020 Osiris Alejandro Gomez <osiris@gcoop.coop>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,17 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# shellcheck disable=SC1091
 # shellcheck disable=SC1090
 # shellcheck source=/dev/null
-# shellcheck disable=SC2035
 
-DIR_BIN=$(dirname "$0") && source "$DIR_BIN/git-src-common"
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
 
 function usage()
 {
 cat << EOF
-Usage:
+
+## \`$BIN\` Search and checkout branch using \`fzf\`
+
+### Usage
 
 \`\`\`bash
 
@@ -34,17 +35,15 @@ Usage:
 
 \`\`\`
 
-Check syntax using shellcheck. Group errors by code in result.
-
-Example:
+### Example
 
 \`\`\`bash
 
   $BIN
 
-git-branch-checkout                           SC2124
-git-branch-find                               SC2185
-git-changelog                                 SC2059 SC2086
+		master
+	> develop
+		2/2
 
 \`\`\`
 
@@ -54,27 +53,13 @@ exit 0
 
 [[ "$1" =~ ^[-]+(h|help) ]] && usage
 
-TMP="$(mktemp)"
-FILES="$(mktemp)"
-ERRORS=0
+[[ -n "$FZF_OPTS" ]] && FZF_OPTS='--color=dark'
 
-file --mime-type * | grep shellscript | tr -d ':' > "$FILES"
+BRANCH="$1"
 
-while read -r FILE _
-do
-
-if ! shellcheck "$FILE" > "$TMP"
+if [[ -z "$1" ]]
 then
-
-  SC="$(grep -Eo 'SC[0-9]+' "$TMP" | sort -u | tr '\n' ' ')"
-  printf "%-45s %s\n" "$FILE" "$SC"
-  ERRORS="$((ERRORS+1))"
-
+  BRANCH="$(git branch --no-color | tr -d '* ' | fzf $FZF_OPTS)"
 fi
 
-done < "$FILES"
-
-rm -f "$TMP"
-rm -f "$FILES"
-
-exit "$ERRORS"
+git checkout "$BRANCH"

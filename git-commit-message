@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script comes with ABSOLUTELY NO WARRANTY, use at own risk
-# Copyright (C) 2020 Osiris Alejandro Gomez <osiris@gcoop.coop>
+# Copyright (C) 2020 Osiris Alejandro Gomez <osiux@osiux.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-cd "$PWD" || exit 1
+FILE="$(git diff --staged --name-only | head -1)"
+FILE="$(echo "$FILE" | rev | cut -d . -f2- | rev)"
+LAST="$(git-last-subject)"
+ZERO='  @ 00:00 hs'
+TIME="$(git-last-timemsg)"
 
-ORIGIN='origin'
-[[ -z "$1" ]] || ORIGIN="$1"
+[[    "$TIME" = "$ZERO" ]] && TIME="$(jrnl-time2git 2>/dev/null)"
+[[ -z "$TIME"           ]] && TIME="$ZERO"
 
-git remote get-url "$ORIGIN"
+printf "%s: %s\\n\\n%s\\n" "$FILE" "$LAST" "$TIME"

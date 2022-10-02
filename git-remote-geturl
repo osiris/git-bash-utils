@@ -16,9 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-cd "$PWD" || exit 1
+[[ -n "$ORIGIN"  ]] || ORIGIN='origin'
+[[ -z "$1"       ]] || ORIGIN="$1"
+[[ -n "$GET_ALL" ]] && GET_ALL='--all'
+[[ -n "$FILTER"  ]] || FILTER='.*'
+[[ -z "$2"       ]] || FILTER="$2"
 
-ORIGIN='origin'
-[[ -z "$1" ]] || ORIGIN="$1"
-
-git remote get-url "$ORIGIN" | sed 's/[a-z\-]\+:[a-zA-Z0-9_\-]\+@//g'
+git remote get-url "$ORIGIN" $GET_ALL      \
+  | sed 's/[a-z\-]\+:[a-zA-Z0-9_\-]\+@//g' \
+  | grep -E "$FILTER"
