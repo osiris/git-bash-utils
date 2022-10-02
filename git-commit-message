@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2020 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+FILE="$(git diff --staged --name-only | head -1)"
+FILE="$(echo "$FILE" | rev | cut -d . -f2- | rev)"
+LAST="$(git-last-subject)"
+ZERO='  @ 00:00 hs'
+TIME="$(git-last-timemsg)"
+
+[[    "$TIME" = "$ZERO" ]] && TIME="$(jrnl-time2git 2>/dev/null)"
+[[ -z "$TIME"           ]] && TIME="$ZERO"
+
+printf "%s: %s\\n\\n%s\\n" "$FILE" "$LAST" "$TIME"
