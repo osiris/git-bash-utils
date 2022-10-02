@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script comes with ABSOLUTELY NO WARRANTY, use at own risk
-# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,26 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-TMP1='/tmp/.git-repos.1.tmp'
-TMP2='/tmp/.git-repos.2.tmp'
-REPOS="$HOME/.git-repos"
-
-[[ -e $PWD/.git-repos ]] && REPOS="$PWD/.git-repos"
-
-true > "$TMP1"
-true > "$TMP2"
-
-sort -k1 "$REPOS" | sort -u | while read -r n r
-do
-  dir=$(echo "$n" | grep -o / | head -1)
-  if [[ "$dir" = "/" ]]
-  then
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP1"
-  else
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP2"
-  fi
-done
-
-sort -u "$TMP1"  > "$REPOS"
-sort -u "$TMP2" >> "$REPOS"
-rm -f "$TMP1" "$TMP2"
+TIME="$(git-last-timediff "$1")"
+[[ -z "$TIME" ]] && TIME='00:00'
+printf "  @ %s hs\\n" "$TIME"

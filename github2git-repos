@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+BACKEND='github'
+LIMIT='200'
+OWNER="$USER"
+
+RED="$(tput setaf 196)"
+NORMAL="$(tput setaf 10)"
+
+die ()
+{
+  printf "%s\\n" "${RED}[ERROR] $1 $NORMAL" && exit 1
+}
+
+[[ -z "$1" ]] || OWNER="$1"
+
+DIR="$BACKEND-$OWNER"
+JSON="github-$OWNER.json"
+JSON_FIELDS='name,sshUrl'
+
+[[ ! -e "$(command -v gh)" ]] \
+  && die "NOT FOUND gh. GET gh FROM https://github.com/cli/cli"
+
+TMP="$(mktemp)"
+
+if [[ ! -s "$JSON" ]]
+then
+
+  echo "REMOVE EMPTY $JSON" && rm -f "$JSON"
+
+fi
+
+if [[ ! -e "$JSON" ]]
+then
+
+  echo "GET REPOS FROM $BACKEND:/$OWNER"
+  gh repo list "$OWNER"   \
+    --limit "$LIMIT"      \
+    --json "$JSON_FIELDS" > "$JSON"
+
+fi
+
+JQ='.[] | "\(.name) \(.sshUrl)"'
+
+mkdir -p "$DIR"
+GIT_REPOS="$DIR/.git-repos"
+
+echo "GET REPOSITORIES FROM $JSON"
+
+jq -r "$JQ" "$JSON"                   \
+  | awk '{printf "%-50s %s\n",$1,$2}' \
+  | sort                              > "$TMP"
+
+TOTAL="$(wc -l "$GIT_REPOS" | awk '{print $1}')"
+
+[[ ! -s "$TMP" ]] && die "EMPTY $GIT_REPOS"
+
+if [[ -e "$GIT_REPOS" ]]
+then
+  BAK_REPOS="$DIR/.git-repos-$(date +%s).bak"
+  echo "ALREADY EXISTS $GIT_REPOS"
+  echo "BACKUP $GIT_REPOS TO $BAK_REPOS"
+  mv -f "$GIT_REPOS" "$BAK_REPOS"
+fi
+
+mv -f "$TMP" "$GIT_REPOS"
+echo "GENERATE $GIT_REPOS WITH $TOTAL REPOSITORIES"
+
+rm -f "$TMP" 2>/dev/null

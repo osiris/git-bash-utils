@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script comes with ABSOLUTELY NO WARRANTY, use at own risk
-# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,13 +25,13 @@ function usage()
 {
 cat << EOF
 
-## \`$BIN\` return last tag in repo
+## \`$BIN\` Find value in all tags and show value in each tag
 
 ### Usage:
 
 \`\`\`bash
 
-  $BIN [DIRECTORY]
+  $BIN VALUE [FILE]
 
 \`\`\`
 
@@ -39,9 +39,10 @@ cat << EOF
 
 \`\`\`bash
 
-  $BIN
+  $BIN awx_version group_vars/all.yml
 
-    v0.2.0
+    v0.11.0 awx_version: True
+    v0.10.0 awx_version: False
 
 \`\`\`
 
@@ -51,8 +52,26 @@ exit 0
 
 [[ "$1" =~ ^[-]+(h|help) ]] && usage
 
-[[ -z "$1" ]]   || DIR="$1"
-cd "$DIR"       || die "INVALID DIRECTORY $DIR"
-[[ -d '.git' ]] || die "INVALID GIT REPOSITORY"
+[[ -d "$PWD/.git" ]] || die "INVALID GIT REPOSITORY"
+[[ -z "$1"        ]] && die "EMPTY VALUE"
+[[ -z "$2"        ]] || FILE="$2"
+[[ -z "$FILE"     ]] && die "EMPTY FILE"
+VALUE="$1"
 
-git tag | sort -Vr | head -1
+TMP="$(mktemp)"
+git stash >/dev/null 2>/dev/null
+git tag | sort -V > "$TMP"
+
+while read -r TAG _
+do
+
+  git checkout "$TAG" >/dev/null 2>/dev/null
+
+  GREP="$(grep "$VALUE" "$FILE" 2>/dev/null)"
+  [[ -z "$GREP" ]] && continue
+
+  printf "%s %s\\n" "$TAG" "$GREP"
+
+done < "$TMP"
+
+rm -f "$TMP"

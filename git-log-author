@@ -16,26 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-TMP1='/tmp/.git-repos.1.tmp'
-TMP2='/tmp/.git-repos.2.tmp'
-REPOS="$HOME/.git-repos"
+DIR="$PWD"
 
-[[ -e $PWD/.git-repos ]] && REPOS="$PWD/.git-repos"
+[[ -n "$REGEX_AUTHOR" ]] || REGEX_AUTHOR='(osiris|osiux)'
+[[ -z "$1"            ]] || DIR="$1"
+cd "$DIR"                || exit 1
+[[ -d '.git'          ]] || exit 1
 
-true > "$TMP1"
-true > "$TMP2"
+git_log_author()
+{
 
-sort -k1 "$REPOS" | sort -u | while read -r n r
-do
-  dir=$(echo "$n" | grep -o / | head -1)
-  if [[ "$dir" = "/" ]]
-  then
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP1"
-  else
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP2"
-  fi
-done
+git log --pretty --format='%h %ae' 2>/dev/null \
+  | grep -Ewi "$REGEX_AUTHOR"
 
-sort -u "$TMP1"  > "$REPOS"
-sort -u "$TMP2" >> "$REPOS"
-rm -f "$TMP1" "$TMP2"
+}
+
+git_log_author

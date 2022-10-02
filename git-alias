@@ -90,17 +90,14 @@ alias gvm="vim -p \$(git status --porcelain | grep ^\ M | cut -c 4-)"
 
 alias gitviz="echo 'digraph git {'>/tmp/git.dot ; git log --pretty='format: %h -> { %p }' | head | sed 's/[0-9a-f]*/\"&\"/g' | sed s/\"\"//g >>/tmp/git.dot; echo '}'>>/tmp/git.dot; cat /tmp/git.dot"
 
+alias gga="git-grep-all"
+
 alias grhm="git reset --hard origin/master"
 
 function grs()
 {
   [[ -z "$1" ]] && exit 1
   git reset soft "$1"
-}
-
-function gga()
-{
-  git grep "$@" $(git rev-list --all)
 }
 
 function gsu()

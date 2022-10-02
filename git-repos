@@ -16,24 +16,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# shellcheck disable=SC2046
+
 # white='[0m'
 # green='[01;32m'
 # red='[01;31m'
 # yellow='[01;33m'
 
-CLONE=0
-PUSH=0
-PULL=0
-TAGS_FETCH=0
-TAGS_PUSH=0
-DELETE=0
-SHOW_LOG=0
-SHOW_TIME=0
-FILTER=''
-EXCLUDE=''
-ZERO_COMMITS=0
+[[ -n "$CLONE"        ]] || CLONE=0
+[[ -n "$PUSH"         ]] || PUSH=0
+[[ -n "$PULL"         ]] || PULL=0
+[[ -n "$TAGS_FETCH"   ]] || TAGS_FETCH=0
+[[ -n "$TAGS_PUSH"    ]] || TAGS_PUSH=0
+[[ -n "$DELETE"       ]] || DELETE=0
+[[ -n "$SHOW_LOG"     ]] || SHOW_LOG=0
+[[ -n "$SHOW_TIME"    ]] || SHOW_TIME=0
+[[ -n "$FILTER"       ]] || FILTER=''
+[[ -n "$EXCLUDE"      ]] || EXCLUDE=''
+[[ -n "$ZERO_COMMITS" ]] || ZERO_COMMITS=0
 
-BIN=$(basename "$0")
+BIN="$(basename "$0")"
 
 function usage()
 {
@@ -90,8 +92,8 @@ fi
 
 repo_error ()
 {
-  S="${red}✖"
-  printf " %s%s %-36s %s%-13s %s %s\n" "$S" "$yellow" "$REPO_NAME" "$red" "$1" "$green"
+  S="${red}✖${yellow}"
+  printf " %s %-36s %s\\n" "$S" "$REPO_NAME" "${red}${1}${green}"
 }
 
 die()
@@ -111,7 +113,7 @@ fi
 
 [[ -e "$REPOS" ]] || die "NOT FOUND $REPOS"
 
-while getopts "AcdD:f:ghltsx:z" OPTION
+while getopts "AcdD:f:ghltaGsx:z" OPTION
 do
   case "$OPTION" in
     A)
@@ -141,7 +143,7 @@ do
     a)
       TAGS_FETCH=1
       ;;
-    A)
+    G)
       TAGS_PUSH=1
       ;;
     s)
@@ -155,6 +157,9 @@ do
       ;;
     z)
       ZERO_COMMITS=1
+      ;;
+    *)
+      ANSI=0
       ;;
   esac
 done
@@ -180,9 +185,9 @@ if [[ -z "$FILTER" ]]
 then
   if [[ -z "$EXCLUDE" ]]
   then
-    GIT_REPOS="$(egrep -v "^#" "$REPOS")"
+    GIT_REPOS="$(grep -Ev "^#" "$REPOS")"
   else
-    GIT_REPOS="$(egrep -v "^#" "$REPOS" | egrep -v "$EXCLUDE")"
+    GIT_REPOS="$(grep -Ev "^#" "$REPOS" | grep -Ev "$EXCLUDE")"
   fi
 else
   if [[ -z "$EXCLUDE" ]]
@@ -235,7 +240,7 @@ do
 
   if [[ "$PUSH" -eq 1 ]]
   then
-    cd "$DIR"
+    cd "$DIR" || exit
     HTTPS="$(grep -Eo "$DIR.*https" "$REPOS" | awk '{print $2}' | head -1)"
 
     if [[ "$HTTPS" != "https" ]]
@@ -282,11 +287,11 @@ do
   fi
 
   LAST_TAG=$(cd "$DIR" && git tag -l --sort=-v:refname | head -1)
-  if [[ ! -z "$LAST_TAG" ]]
+  if [[ -z "$LAST_TAG" ]]
   then
-    REPO_NAME="$yellow$REPO_NAME $white($LAST_TAG)"
-  else
     REPO_NAME="$yellow$REPO_NAME $white"
+  else
+    REPO_NAME="$yellow$REPO_NAME $white($LAST_TAG)"
   fi
 
   BAR=$(cd "$DIR" && git-streak)
@@ -306,7 +311,7 @@ do
 
   if [[ "$SHOW_TIME" -eq 1 ]]
   then
-    HOURS=$(git log | egrep -o '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}')
+    HOURS=$(git log | grep -Eo '@(.*)[0-9]{2}:[0-9]{2}' | tr -d '@ ' | awk 'function m(h) {split(h,A,":");return A[1]*60+A[2]} {t+=m($1)} END {printf "%02d:%02d",t/(60),t%60}')
     printf " %s%s %s %-20s %10s %-20s %s\n" "$S" "$yellow" "$BAR" "$LAST_TAG" "$HOURS" "$REPO_NAME" "$GIT"
   else
     printf " %s %-50s %s %s\n" "$S" "$REPO_NAME" "$BAR" "$GIT"
@@ -314,10 +319,9 @@ do
 
   if [[ "$SHOW_LOG" -eq 1 ]]
   then
-    LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed s/:[0-9]*\ -[0-9]*\ /\ /g | sed s/@[a-z.\(\)]*/\\\t/g)
+    LOG=$(git log -1 --topo-order --date=iso --pretty --format="%h %ad %ae %s" | sed 's/:[0-9]*\ -[0-9]*\ /\ /g' | sed 's/@[a-z.\(\)]*/\t/g')
     echo -e "${white}\t  $LOG"
   fi
 done
 
 echo "$white"
-

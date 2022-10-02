@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2020 Osiris Alejandro Gomez <osiris@gcoop.coop>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC2116
+
+TMPI="$(mktemp)"
+
+function commit_get_last()
+{
+  git log --oneline --pretty --format='%h' -1
+}
+
+function commit_get_hash()
+{
+  git log --oneline --pretty --format='%H' -1 "$1"
+}
+
+if [[ ! -t 0 ]]
+then
+
+  true > "$TMPI"
+
+  while IFS= read -r PIPED_INPUT
+  do
+    echo "$PIPED_INPUT" >> "$TMPI"
+  done
+
+else
+
+  [[ -z "$1" ]] && COMMIT="$(commit_get_last)"
+  [[ -z "$1" ]] || COMMIT="$1"
+  echo "$COMMIT" > "$TMPI"
+
+fi
+
+[[ ! -e "$TMPI" ]] && exit 1
+[[ -d '.git'    ]] || exit 1
+
+[[ -n "$ORIGIN" ]] || ORIGIN='origin'
+[[ -n "$EXTRA"  ]] || EXTRA=''
+[[ -n "$PREFIX" ]] || PREFIX='-/commit'
+
+URL="$(git remote get-url --all "$ORIGIN" | head -1 | sed 's/[a-z\-]\+:[a-zA-Z0-9_\-]\+@//g')"
+
+while read -r COMMIT LOG
+do
+
+	SHASH="${COMMIT% *}"
+  LHASH="$(commit_get_hash "$SHASH")"
+	printf "[\`%s\`](%s/%s/%s) %s\\n" \
+         "$SHASH" "$URL" "$PREFIX" "$LHASH" "$LOG"
+
+done < "$TMPI" | sed 's/ \+$//g'
+
+rm  -f "$TMPI"

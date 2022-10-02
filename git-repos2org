@@ -16,13 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-[[ ! -e .git-repos ]] && exit 1
+# shellcheck disable=SC2129
+
+[[ -e .git-repos ]] || exit 1
 
 GIT_HEAD='git-head.org'
 GIT_ORG='git.org'
 
-[[ ! -z "$1" ]] && GIT_HEAD="$1"
-[[ ! -z "$2" ]] && GIT_ORG="$2"
+[[ -z "$1" ]] || GIT_HEAD="$1"
+[[ -z "$2" ]] || GIT_ORG="$2"
 true > "$GIT_ORG"
 [[ -e "$GIT_HEAD" ]] && cat "$GIT_HEAD" > "$GIT_ORG"
 
@@ -32,7 +34,6 @@ grep '/' .git-repos | sort > "$TMP0"
 
 MAX="$(awk '{print $1}' .git-repos | rev | cut -d/ -f1 | wc -L)"
 LIMIT1="$((MAX*2+9))"
-LIMIT2="$((MAX+40))"
 
 printf "** git repositories\\n\\n"    >> "$GIT_ORG"
 printf "| %-*s | %10s | %6s | %-*s |\\n"    \
@@ -41,7 +42,7 @@ printf "| %-*s | %10s | %6s | %-*s |\\n"    \
 printf "| %-*s | %10s | %6s | %-*s |\\n"    \
   $LIMIT1 ' ' ' ' ' ' 40 ' ' | tr ' ' '-' >> "$GIT_ORG"
 
-while read -r DIR REPO
+while read -r DIR _
 do
 
 NAME="$(echo "$DIR" | rev | cut -d/ -f1 | rev)"
@@ -58,7 +59,7 @@ done < "$TMP0"
 
 printf "\\n\\n" >> "$GIT_ORG"
 
-while read -r DIR REPO
+while read -r DIR _
 do
 
 NAME="$(echo "$DIR" | rev | cut -d/ -f1 | rev)"

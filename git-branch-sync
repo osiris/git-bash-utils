@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script comes with ABSOLUTELY NO WARRANTY, use at own risk
-# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,26 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-TMP1='/tmp/.git-repos.1.tmp'
-TMP2='/tmp/.git-repos.2.tmp'
-REPOS="$HOME/.git-repos"
+[[ -d "$PWD/.git" ]] || exit 1
+[[ -n "$ORIGIN"   ]] || ORIGIN='origin'
 
-[[ -e $PWD/.git-repos ]] && REPOS="$PWD/.git-repos"
+git fetch || exit 1
 
-true > "$TMP1"
-true > "$TMP2"
-
-sort -k1 "$REPOS" | sort -u | while read -r n r
+git branch -r | cut -d/ -f2- | grep -v HEAD | while read -r B
 do
-  dir=$(echo "$n" | grep -o / | head -1)
-  if [[ "$dir" = "/" ]]
-  then
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP1"
-  else
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP2"
-  fi
-done
 
-sort -u "$TMP1"  > "$REPOS"
-sort -u "$TMP2" >> "$REPOS"
-rm -f "$TMP1" "$TMP2"
+  UPSTREAM="--set-upstream-to=origin/$B"
+  git checkout "$B" && git branch "$UPSTREAM" "$B" && git pull
+
+done

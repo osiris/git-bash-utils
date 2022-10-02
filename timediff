@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script comes with ABSOLUTELY NO WARRANTY, use at own risk
-# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2017 Osiris Alejandro Gomez <osiux@osiux.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,26 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-TMP1='/tmp/.git-repos.1.tmp'
-TMP2='/tmp/.git-repos.2.tmp'
-REPOS="$HOME/.git-repos"
+TODAY="$(date '+%F')"
 
-[[ -e $PWD/.git-repos ]] && REPOS="$PWD/.git-repos"
+[[ -z "$1" ]] && exit 1
+S1="$(date -d "$TODAY $1" '+%s')"
 
-true > "$TMP1"
-true > "$TMP2"
+if [[ -z "$2" ]]
+then
+  S2="$(date -d "now" '+%s')"
+else
+  S2="$(date -d "$TODAY $2" '+%s')"
+fi
 
-sort -k1 "$REPOS" | sort -u | while read -r n r
-do
-  dir=$(echo "$n" | grep -o / | head -1)
-  if [[ "$dir" = "/" ]]
-  then
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP1"
-  else
-    printf "%-72s %s\n" "$n" "$r" >> "$TMP2"
-  fi
-done
+if [[ "$S1" -gt "$S2" ]]
+then
+  D1="$(date -u -d "@$S2" +"%s")"
+  D2="$(date -u -d "@$S1" +"%s")"
+else
+  D1="$(date -u -d "@$S1" +"%s")"
+  D2="$(date -u -d "@$S2" +"%s")"
+fi
 
-sort -u "$TMP1"  > "$REPOS"
-sort -u "$TMP2" >> "$REPOS"
-rm -f "$TMP1" "$TMP2"
+date -u -d "0 $D2 sec - $D1 sec" +"%H:%M"

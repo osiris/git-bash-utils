@@ -16,8 +16,44 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-[[ ! -z "$1" ]] && cd "$1"
-[[ ! -d .git ]] && exit 1
+# shellcheck disable=SC1090
+# shellcheck source=/dev/null
+
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+function usage()
+{
+cat << EOF
+
+## \`$BIN\` return remote url in org-mode format
+
+### Usage:
+
+\`\`\`bash
+
+  $BIN [DIRECTORY]
+
+\`\`\`
+
+### Example:
+
+\`\`\`bash
+
+  $BIN
+
+    [[https://gitlab.com/osiux/git-bash-utils][gitlab]]
+
+\`\`\`
+
+EOF
+exit 0
+}
+
+[[ "$1" =~ ^[-]+(h|help) ]] && usage
+
+[[ -z "$1" ]]   || DIR="$1"
+cd "$DIR"       || die "INVALID DIRECTORY $DIR"
+[[ -d '.git' ]] || die "INVALID GIT REPOSITORY"
 
 git remote | while read -r REMOTE
 do

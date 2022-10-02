@@ -1,0 +1,180 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiris@gcoop.coop>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC1091
+# shellcheck disable=SC1090
+# shellcheck source=/dev/null
+
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+function usage()
+{
+cat << EOF
+
+## \`$BIN\` Generate CHANGELOG based on tag diff
+
+### Usage
+
+\`\`\`bash
+
+  $BIN [CHANGELOG.md]
+
+\`\`\`
+
+### Example
+
+\`\`\`bash
+
+  $BIN
+
+  GENERATE CHANGELOG.md
+
+\`\`\`
+
+### Defaults
+
+| _variable_     | _default value_                                              |
+|----------------|--------------------------------------------------------------|
+| \`CHANGELOG   \` | \`CHANGELOG.md                                              \` |
+| \`DATE_REGEX  \` | \`^[0-9]{4}-[0-9]{2}-[0-9]{2}                               \` |
+| \`NAME        \` | \`directory name                                            \` |
+| \`TITLE       \` | \`uppercase directory name + CHANGELOG                      \` |
+| \`SEMVER      \` | \`[Semantic Versioning](https://semver.org/spec/v2.0.0.html)\` |
+| \`REPO_URL    \` | \`git remote get-url origin                                 \` |
+| \`IGNORE_REGEX\` | \`Merge (branch|tag)                                        \` |
+
+### Example Output Format
+
+\`\`\`md
+
+# [_GIT-BASH-UTILS CHANGELOG_](https://gitlab.com/osiux/git-bash-utils)
+
+ - this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+
+## [\`Unreleased - 2022-08-31\`](https://gitlab.com/osiux/git-bash-utils/-/compare/3b75889...develop)
+
+### \`datediff\`
+
+- calculate the number of days between 2 dates (ISO 8601)
+
+\`\`\`
+
+EOF
+exit 0
+}
+
+[[ "$1" =~ ^[-]+(h|help) ]] && usage
+
+[[ -d '.git'             ]] || die "NOT FOUND VALID GIT REPOSITORY"
+[[ -e '.changelog'       ]] && source .changelog
+
+[[ -n "$CHANGELOG"       ]] || CHANGELOG='CHANGELOG.md'
+[[ -z "$1"               ]] || CHANGELOG="$1"
+[[ -n "$DATE_REGEX"      ]] || DATE_REGEX='^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+[[ -n "$NAME"            ]] || NAME="$(echo "$PWD" | rev | cut -d/ -f1 | rev)"
+[[ -n "$TITLE"           ]] || TITLE="${NAME^^} CHANGELOG"
+[[ -n "$SEMVER"          ]] || SEMVER='[Semantic Versioning](https://semver.org/spec/v2.0.0.html)'
+[[ -n "$REPO_URL"        ]] || REPO_URL="$(git-remote-geturl)"
+[[ -n "$IGNORE_REGEX"    ]] || IGNORE_REGEX='Merge (branch|tag)'
+
+TAGS="$(mktemp)"
+TMP="$(mktemp)"
+LOG="$(mktemp)"
+
+function changelog_generate()
+{
+
+## first commit
+git rev-list --max-parents=0 HEAD | cut -c -7     > "$TAGS"
+
+## tags column from
+git tag --sort version:refname | awk '{print $1}' >>"$TAGS"
+
+## tags column to
+tail -n+2 "$TAGS" > "$TMP"
+
+## join tags column from and to in cronological order
+paste "$TAGS" "$TMP" | tac | sponge "$TAGS"
+
+## title
+printf "# [_%s_](%s)\\n\\n" "$TITLE" "$REPO_URL"
+## include Semantic Versioning
+[[ -z "$SEMVER" ]] || printf " - %s\\n" "this project adheres to $SEMVER"
+printf "\\n"
+
+while read -r FROM TO
+do
+
+  # use develop as Unreleased version
+  [[ -z "$TO" ]] && TO='develop'
+
+  # get diff between tags
+  git diff --name-only "$TO" "$FROM" > "$TMP"
+
+  DATE="$(git log -1 --format='%ci' "$TO" | grep -Eo "$DATE_REGEX")"
+  TAG_URL="${REPO_URL//.git/}/-/compare/$FROM...$TO"
+  RELEASE="${TO//develop/Unreleased}"
+
+  TAG_NOTE="_$(git tag -n1 "$TO" | sed "s/$TO\ \+//g")_"
+  TAG_NOTE="${TAG_NOTE//__/}"
+  [[ -z "$TAG_NOTE" ]] || TAG_NOTE=" $TAG_NOTE"
+
+  # subtitle for release
+  printf "## [\`%s - %s\`](%s)%s\\n\\n" \
+         "$RELEASE" "$DATE" "$TAG_URL" "$TAG_NOTE"
+
+  # get commits log
+  git log --oneline --pretty --format="%s" "$TO"..."$FROM" \
+    | grep -vE "$IGNORE_REGEX"                             > "$LOG"
+
+  if grep -qE '^[a-zA-Z\-]+:' "$LOG" 2>/dev/null
+  then
+
+    # group commits by prefix:
+    awk '{print $1}' "$LOG" | grep ':' | sort -u | while read -r PREFIX
+    do
+
+      printf "### \`%s\`\\n\\n" "${PREFIX//:/}"
+      grep -E "^$PREFIX" "$LOG" \
+        | cut -d ':' -f2- \
+        | sed 's/^/-/g' \
+        | awk '!seen[$0]++'
+      printf "\\n"
+
+    done
+
+  else
+
+    # commits without prefix
+    sed 's/^/- /g' "$LOG" | awk '!seen[$0]++'
+    printf "\\n"
+
+  fi
+
+done < "$TAGS"
+
+}
+
+# generate and overwrite CHANGELOG
+changelog_generate > "$CHANGELOG" && echo "GENERATE $CHANGELOG"
+
+# clean temporal files
+rm -f "$LOG"
+rm -f "$TMP"
+rm -f "$TAGS"
