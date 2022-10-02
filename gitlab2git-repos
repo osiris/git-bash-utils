@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2019 Osiris Alejandro Gomez <osiris@gcoop.coop>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC2086
+
+[[ -n "$BACKEND"     ]] || BACKEND='gitlab.com'
+[[ -n "$LIMIT"       ]] || LIMIT='1000'
+[[ -n "$OWNER"       ]] || OWNER='osiux'
+[[ -n "$PROXY_SOCKS" ]] || PROXY_SOCKS=0
+
+RED="$(tput setaf 196)"
+NORMAL="$(tput setaf 10)"
+CURL_SOCKS=''
+
+die ()
+{
+  printf "%s\\n" "${RED}[ERROR] $1 $NORMAL" && exit 1
+}
+
+[[ -z "$1" ]] || OWNER="$1"
+[[ -z "$2" ]] || BACKEND="$2"
+
+URL="https://$BACKEND/api/v4/projects?per_page=$LIMIT&membership=true"
+
+TOKEN="$(pass "$BACKEND/token/$OWNER")"
+
+[[ -z "$TOKEN" ]] && die "EMPTY TOKEN"
+
+[[ "$PROXY_SOCKS" -eq 1 ]] && CURL_SOCKS="--socks5 $PROXY_SOCKS"
+
+JQ='.[] | "\(.name) \(.ssh_url_to_repo)"'
+
+JSON="gitlab-$OWNER.json"
+DIR="gitlab-$OWNER"
+GIT_REPOS="$DIR/.git-repos"
+
+mkdir -p "$DIR"
+
+echo "GET REPOS FROM $BACKEND FOR $OWNER"
+
+curl -s -k $CURL_SOCKS            \
+  --header "PRIVATE-TOKEN: $TOKEN" \
+  "$URL"                           > "$JSON"
+
+[[ ! -s "$JSON" ]] && die "EMPTY JSON $JSON"
+
+TMP="$(mktemp)"
+
+echo "GET REPOS FROM $JSON"
+jq -r "$JQ" "$JSON" \
+  | awk '$2~/^git@.*/{printf "%-72s %s\n",$1,$2}' > "$TMP"
+
+[[ ! -s "$TMP" ]] && die "EMPTY $TMP"
+
+TOTAL="$(wc -l "$TMP" | awk '{print $1}')"
+
+echo "GENERATE $GIT_REPOS WITH $TOTAL REPOSITORIES"
+mv -f "$TMP" "$GIT_REPOS"
