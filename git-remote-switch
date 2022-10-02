@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC1091
+# shellcheck disable=SC1090
+# shellcheck source=/dev/null
+
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+function usage()
+{
+cat << EOF
+
+## \`$BIN\` swith remote origin from http to ssh and viceversa
+
+### Usage:
+
+\`\`\`bash
+
+  $BIN
+
+\`\`\`
+
+### Example:
+
+\`\`\`bash
+
+  $BIN
+
+  switch from https://gitlab.com/osiux/git-bash-utils to gitlab.com:/osiux/git-bash-utils
+
+\`\`\`
+
+EOF
+exit 0
+}
+
+[[ "$1" =~ ^[-]+(h|help) ]] && usage
+
+REMOTE="$(git-remote-geturl | head -1)"
+
+[[ -z "$REMOTE" ]] && exit 1
+
+if [[ "$REMOTE" =~ ^http.* ]]
+then
+
+  R_HTTP="$(echo "$REMOTE" | sed 's/https:\/\///g')"
+  R_HOST="$(echo "$R_HTTP" | cut -d '/' -f1  | tr -d :)"
+  R_PATH="$(echo "$R_HTTP" | cut -d '/' -f2- | tr -d :)"
+  R_SSH="$R_HOST:/$R_PATH"
+  NEW="$R_SSH"
+
+else
+
+  R_HOST="$(echo "$REMOTE" | sed 's/git@//g' | cut -d ':' -f1)"
+  R_PATH="$(echo "$REMOTE" | cut -d ':' -f2- | sed 's/^\///g')"
+  R_HTTP="https://$R_HOST/$R_PATH"
+  NEW="$R_HTTP"
+
+fi
+
+echo "switch from $REMOTE to $NEW"
+$(command -v git) remote set-url origin "$NEW"
