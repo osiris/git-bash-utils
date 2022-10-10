@@ -22,8 +22,8 @@
 FILE="$1"
 TMP1="$(mktemp)"
 TMP2="$(mktemp)"
-GIT_ORIGIN="$(git remote get-url origin | tr : / | sed 's/git@//g')"
-GIT_URL="https://$GIT_ORIGIN/-/commit"
+GIT_ORIGIN="$(git-remote-geturl | sed 's/\.git$//g')"
+GIT_URL="$GIT_ORIGIN/-/commit"
 
 printf "\n** ChangeLog\n\n" > "$TMP1"
 
