@@ -25,4 +25,7 @@ TIME="$(git-last-timemsg)"
 [[    "$TIME" = "$ZERO" ]] && TIME="$(jrnl-time2git 2>/dev/null)"
 [[ -z "$TIME"           ]] && TIME="$ZERO"
 
-printf "%s: %s\\n\\n%s\\n" "$FILE" "$LAST" "$TIME"
+SUBJECT="$FILE: $LAST"
+[[ -z "$FILE" ]] && SUBJECT="$LAST"
+
+printf "%s\\n\\n%s\\n" "$SUBJECT" "$TIME"
