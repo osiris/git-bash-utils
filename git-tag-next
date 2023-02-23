@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2021 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC1090
+# shellcheck source=/dev/null
+
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+function usage()
+{
+cat << EOF
+
+## \`$BIN\` return next tag in repo
+
+### Usage:
+
+\`\`\`bash
+
+  $BIN [DIRECTORY]
+
+\`\`\`
+
+### Example:
+
+\`\`\`bash
+
+  $BIN
+
+    v0.2.0
+
+\`\`\`
+
+Default aliases:
+
+\`\`\`bash
+
+alias gxi="NEXT_VERSION=MINOR git-tag-next"
+alias gxj="NEXT_VERSION=MAJOR git-tag-next"
+alias gxp="NEXT_VERSION=PATCH git-tag-next"
+
+gxp
+
+  v0.24.1
+
+gxi
+
+  v0.25.0
+
+gxj
+
+  v1.0.0
+
+\`\`\`
+
+EOF
+exit 0
+}
+
+[[ "$1" =~ ^[-]+(h|help) ]] && usage
+
+[[ -z "$1"            ]] || DIR="$1"
+cd "$DIR"                || die "INVALID DIRECTORY $DIR"
+[[ -d '.git'          ]] || die "INVALID GIT REPOSITORY"
+[[ -n "$NEXT_VERSION" ]] || NEXT_VERSION='MINOR'
+
+LAST="$(git tag | sort -Vr | head -1)"
+
+bump-version "$LAST" "$NEXT_VERSION"
