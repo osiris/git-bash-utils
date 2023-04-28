@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC1091
+
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+[[ -n "$HOTFIX" ]] || HOTFIX="$1"
+[[ -n "$BASE"   ]] || BASE="$2"
+[[ -z "$BASE"   ]] && BASE='master'
+[[ -z "$HOTFIX" ]] && die "UNDEFINED HOTFIX"
+[[ -z "$BASE"   ]] && die "UNDEFINED BASE"
+
+CMD="git branch | grep -v '\*' | grep hotfix | xargs git branch -d 2>/dev/null"
+echo >&2 "## DELETE ALL HOTFIX BRANCHS (press CTRL+C to abort)"
+for i in {1..5};do echo >&2 '.';sleep "$i";done
+bash -c "$CMD"
+
+CMD="git flow hotfix start $HOTFIX $BASE"
+echo >&2 "## START HOTFIX $HOTFIX FROM $BASE ... (press CTRL+C to abort)"
+for i in {1..5};do echo >&2 '.';sleep "$i";done
+bash -c "$CMD" || die "FAILED TO START HOTFIX $HOTFIX FROM $BASE"
