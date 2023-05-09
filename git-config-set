@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2023 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2023 Osiris Alejandro Gomez <osiris@gcoop.coop>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+function die()
+{
+  echo >&2 "$1"
+  exit 0
+}
+
+CONFIGS="$(cat << EOF
+core.bare                     0
+core.filemode                 true
+core.logallrefupdates         0
+core.repositoryformatversion  0
+EOF
+)"
+
+[[ -d .git ]] || die "INVALID GIT REPO $PWD"
+DIR="$(basename "$PWD")"
+
+[[ -n "$GIT_HOST"  ]] || GIT_HOST='gitlab.com'
+[[ -n "$GIT_PROTO" ]] || GIT_PROTO='https'
+[[ -n "$GIT_GROUP" ]] || GIT_GROUP="$USER"
+[[ -n "$GIT_URL"   ]] || GIT_URL="$1"
+[[ -n "$ORIGIN"    ]] || ORIGIN='origin'
+
+if [[ -z "$GIT_URL" ]]
+then
+  if [[ "$GIT_PROTO" = 'https' ]]
+  then
+    URL="https://$GIT_HOST/$GIT_GROUP/$DIR"
+  else
+    URL="git@$GIT_HOST:/$GIT_GROUP/$DIR"
+  fi
+fi
+
+echo "$CONFIGS" | while read -r KEY VALUE
+do
+  git config --local "$KEY" "$VALUE"
+done
+
+ORIGIN_URL="$(git remote get-url "$ORIGIN" 2>/dev/null)"
+if [[ -z "$ORIGIN_URL" ]]
+then
+  git remote add "$ORIGIN" "$URL"
+else
+  ALL="$(git remote get-url --all origin | grep -o "$URL")"
+  if [[ -z "$ALL" ]]
+  then
+    [[ "$URL" != "$ORIGIN_URL" ]] \
+      && git remote set-url --add "$ORIGIN" "$URL"
+  fi
+fi
+
+grep url .git/config
