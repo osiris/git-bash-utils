@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+function die()
+{
+  echo >&2 "$1"
+  exit 1
+}
+
+function stderror()
+{
+  echo >&2 "$1"
+}
+
+[[ -n "$GIT_REPOS" ]] || GIT_REPOS='.git-repos'
+[[ -f "$GIT_REPOS" ]] || die "NOT FOUND FILE $GIT_REPOS"
+[[ -n "$DIR_BASE"  ]] || DIR_BASE="$PWD"
+
+while read -r DIR _
+do
+
+  if [[ ! -d "$DIR_BASE/$DIR" ]]
+  then
+    stderror "CANNOT CHANGE TO $DIR IGNORE"
+    continue
+  fi
+
+  cd "$DIR_BASE/$DIR" || continue
+
+  [[ -n "$GIT_HOST"  ]] && export GIT_HOST="$GIT_HOST"
+  [[ -n "$GIT_GROUP" ]] && export GIT_GROUP="$GIT_GROUP"
+  [[ -n "$GIT_PROTO" ]] && export GIT_PROTO="$GIT_PROTO"
+
+  stderror "GENERATE .git/config IN $DIR_BASE/$DIR"
+  git-config-set
+
+done < "$GIT_REPOS"
