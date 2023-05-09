@@ -241,16 +241,12 @@ do
   if [[ "$PUSH" -eq 1 ]]
   then
     cd "$DIR" || exit
-    HTTPS="$(grep -Eo "$DIR.*https" "$REPOS" | awk '{print $2}' | head -1)"
 
-    if [[ "$HTTPS" != "https" ]]
+    if [[ "$TAGS_PUSH" -eq 1 ]]
     then
-      if [[ "$TAGS_PUSH" -eq 1 ]]
-      then
-        git push --tags -q 2>/dev/null 1>/dev/null
-      else
-        git push -q 2>/dev/null 1>/dev/null
-      fi
+      git push --all --tags -q 2>/dev/null 1>/dev/null
+    else
+      git push --all -q 2>/dev/null 1>/dev/null
     fi
   fi
 
