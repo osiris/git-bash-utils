@@ -84,6 +84,7 @@ elif [[ "$2" == "PATCH" ]]; then
 elif [[ "$2" == "MAJOR" ]]; then
   MAJOR="$(echo "$MAJOR + 1" | bc)"
   MINOR='0'
+  PATCH='0'
 else
   usage
 fi
