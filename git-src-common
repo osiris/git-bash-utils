@@ -18,6 +18,9 @@
 
 # shellcheck disable=SC2034
 
+# DON'T OVERWRITE GIT VARIABLES LIKE GIT_DIR
+# https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
+
 RED="$(tput setaf 196)"
 GREEN="$(tput setaf 46)"
 NORMAL="$(tput sgr0)"
