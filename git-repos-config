@@ -31,6 +31,10 @@ function stderror()
 [[ -f "$GIT_REPOS" ]] || die "NOT FOUND FILE $GIT_REPOS"
 [[ -n "$DIR_BASE"  ]] || DIR_BASE="$PWD"
 
+TMP="$(mktemp)"
+
+grep -vE '^\#' "$GIT_REPOS" > "$TMP"
+
 while read -r DIR _
 do
 
@@ -49,4 +53,6 @@ do
   stderror "GENERATE .git/config IN $DIR_BASE/$DIR"
   git-config-set
 
-done < "$GIT_REPOS"
+done < "$TMP"
+
+rm -f "$TMP"
