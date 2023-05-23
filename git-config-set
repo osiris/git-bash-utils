@@ -38,15 +38,17 @@ DIR="$(basename "$PWD")"
 [[ -n "$GIT_PROTO" ]] || GIT_PROTO='https'
 [[ -n "$GIT_GROUP" ]] || GIT_GROUP="$USER"
 [[ -n "$GIT_URL"   ]] || GIT_URL="$1"
+[[ -n "$GIT_REPO"  ]] || GIT_REPO="$2"
+[[ -z "$GIT_REPO"  ]] && GIT_REPO="$DIR"
 [[ -n "$ORIGIN"    ]] || ORIGIN='origin'
 
 if [[ -z "$GIT_URL" ]]
 then
   if [[ "$GIT_PROTO" = 'https' ]]
   then
-    URL="https://$GIT_HOST/$GIT_GROUP/$DIR"
+    URL="https://$GIT_HOST/$GIT_GROUP/$GIT_REPO"
   else
-    URL="git@$GIT_HOST:/$GIT_GROUP/$DIR"
+    URL="git@$GIT_HOST:/$GIT_GROUP/$GIT_REPO"
   fi
 fi
 
@@ -67,5 +69,3 @@ else
       && git remote set-url --add "$ORIGIN" "$URL"
   fi
 fi
-
-grep url .git/config
