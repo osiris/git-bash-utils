@@ -49,6 +49,7 @@ do
   [[ -n "$GIT_HOST"  ]] && export GIT_HOST="$GIT_HOST"
   [[ -n "$GIT_GROUP" ]] && export GIT_GROUP="$GIT_GROUP"
   [[ -n "$GIT_PROTO" ]] && export GIT_PROTO="$GIT_PROTO"
+  export GIT_REPO="$DIR"
 
   stderror "GENERATE .git/config IN $DIR_BASE/$DIR"
   git-config-set
