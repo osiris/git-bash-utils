@@ -172,7 +172,8 @@ done < "$TAGS"
 }
 
 # generate and overwrite CHANGELOG
-changelog_generate > "$CHANGELOG" && echo "GENERATE $CHANGELOG"
+changelog_generate | sed '${/^$/d;}' > "$CHANGELOG" \
+  && echo "GENERATE $CHANGELOG"
 
 # clean temporal files
 rm -f "$LOG"
