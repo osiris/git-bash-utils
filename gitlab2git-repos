@@ -63,7 +63,9 @@ TMP="$(mktemp)"
 
 echo "GET REPOS FROM $JSON"
 jq -r "$JQ" "$JSON" \
-  | awk '$2~/^git@.*/{printf "%-72s %s\n",$1,$2}' > "$TMP"
+  | awk '$2~/^git@.*/{printf "%-72s %s\n",$1,$2}' \
+  | sed 's/git@/https:\/\//g'                     \
+  | tr ':' '/' | sed 's/\/\/\//:\/\//g'           > "$TMP"
 
 [[ ! -s "$TMP" ]] && die "EMPTY $TMP"
 
