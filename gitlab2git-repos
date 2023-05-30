@@ -21,7 +21,6 @@
 [[ -n "$BACKEND"     ]] || BACKEND='gitlab.com'
 [[ -n "$LIMIT"       ]] || LIMIT='1000'
 [[ -n "$OWNER"       ]] || OWNER='osiux'
-[[ -n "$PROXY_SOCKS" ]] || PROXY_SOCKS=0
 
 RED="$(tput setaf 196)"
 NORMAL="$(tput setaf 10)"
@@ -37,11 +36,17 @@ die ()
 
 URL="https://$BACKEND/api/v4/projects?per_page=$LIMIT&membership=true"
 
-TOKEN="$(pass "$BACKEND/token/$OWNER")"
+if [[ -z "$TOKEN" ]]
+then
+  if command -v pass >/dev/null
+  then
+    TOKEN="$(pass "$BACKEND/token/$OWNER")"
+  fi
+else
+  die "UNDEFINED TOKEN, TRY export TOKEN=Sup3rM364S3cr37T0k3n"
+fi
 
-[[ -z "$TOKEN" ]] && die "EMPTY TOKEN"
-
-[[ "$PROXY_SOCKS" -eq 1 ]] && CURL_SOCKS="--socks5 $PROXY_SOCKS"
+[[ -n "$PROXY_SOCKS" ]] && CURL_SOCKS="--socks5 $PROXY_SOCKS"
 
 JQ='.[] | "\(.name) \(.ssh_url_to_repo)"'
 
