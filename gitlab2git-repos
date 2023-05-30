@@ -45,8 +45,8 @@ TOKEN="$(pass "$BACKEND/token/$OWNER")"
 
 JQ='.[] | "\(.name) \(.ssh_url_to_repo)"'
 
-JSON="gitlab-$OWNER.json"
-DIR="gitlab-$OWNER"
+JSON="$OWNER.json"
+DIR="$OWNER"
 GIT_REPOS="$DIR/.git-repos"
 
 mkdir -p "$DIR"
