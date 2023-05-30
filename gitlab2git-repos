@@ -41,9 +41,9 @@ then
   if command -v pass >/dev/null
   then
     TOKEN="$(pass "$BACKEND/token/$OWNER")"
+  else
+    die "UNDEFINED TOKEN, TRY export TOKEN=Sup3rM364S3cr37T0k3n"
   fi
-else
-  die "UNDEFINED TOKEN, TRY export TOKEN=Sup3rM364S3cr37T0k3n"
 fi
 
 [[ -n "$PROXY_SOCKS" ]] && CURL_SOCKS="--socks5 $PROXY_SOCKS"
