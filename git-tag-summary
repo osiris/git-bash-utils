@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiris@gcoop.coop>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+function die()
+{
+  echo >&2 "$1"
+  exit 0
+}
+
+[[ -n "$BASH_DEBUG" ]] && set -x
+[[ -d ".git"        ]] || die "NOT FOUND .git DIRECTORY"
+[[ -n "$DATE_REGEX" ]] || DATE_REGEX='^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+[[ -n "$TAG_REGEX"  ]] || TAG_REGEX='^v[0-9]+\.[0-9]+\.[0-9]+'
+[[ -n "$TAG_SORT"   ]] || TAG_SORT='-version:refname'
+[[ -n "$TAG_WIDTH"  ]] || TAG_WIDTH='8'
+[[ -n "$DES_WIDTH"  ]] || DES_WIDTH='110'
+
+GIT_URL="$(git-remote-geturl)"
+GIT_DIR="$(echo "$GIT_URL" | rev | cut -d/ -f1 | rev)"
+GIT_WIDTH="$(echo "$GIT_DIR" | wc -L)"
+COL_WIDTH="$((2+TAG_WIDTH+2+1+GIT_WIDTH+1+TAG_WIDTH+3+1))"
+
+printf "| %-10s | %-*s | %-*s |\n" \
+       '_date_'                    \
+       "$COL_WIDTH"                \
+       '_tag_'                     \
+       "$DES_WIDTH"                \
+       '_description_'
+
+printf "| %-10s | %-*s | %-*s |\n" \
+       ' '                         \
+       "$COL_WIDTH"                \
+       ' '                         \
+       "$DES_WIDTH"                \
+       ' '                         | sed 's/ /-/g'
+
+git tag -n --sort "$TAG_SORT" \
+  | grep -E "$TAG_REGEX" \
+  | while read -r TAG DESCRIPTION
+    do
+
+      DATE="$(git log -1 --format=%ci "$TAG" | grep -Eo "$DATE_REGEX")"
+      FILE="${GIT_DIR}-${TAG}.md"
+      TAG_LINK="$(printf "[\`%*s\`](%s)" "$TAG_WIDTH" "$TAG" "$FILE")"
+
+      printf "| %10s | %-*s | %-*s |\n" \
+             "$DATE"                    \
+             "$COL_WIDTH"               \
+             "$TAG_LINK"                \
+             "$DES_WIDTH"               \
+             "$DESCRIPTION"
+    done
