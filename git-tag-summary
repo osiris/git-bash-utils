@@ -20,7 +20,20 @@
 function die()
 {
   echo >&2 "$1"
+  exit 1
+}
+
+function success()
+{
+  echo >&2 "$1"
   exit 0
+}
+
+function get_tag_description_width()
+{
+
+cut -d ' ' -f2- "$TMP" | sed 's/^ \+//g' | wc -L
+
 }
 
 [[ -n "$BASH_DEBUG"  ]] && set -x
@@ -29,12 +42,17 @@ function die()
 [[ -n "$TAG_REGEX"   ]] || TAG_REGEX='^v[0-9]+\.[0-9]+\.[0-9]+'
 [[ -n "$TAG_SORT"    ]] || TAG_SORT='-version:refname'
 [[ -n "$TAG_WIDTH"   ]] || TAG_WIDTH='8'
-[[ -n "$DES_WIDTH"   ]] || DES_WIDTH='110'
 [[ -n "$NO_TAG_LINK" ]] || NO_TAG_LINK=0
 
 GIT_URL="$(git-remote-geturl)"
 GIT_DIR="$(echo "$GIT_URL" | rev | cut -d/ -f1 | rev)"
 GIT_WIDTH="$(echo "$GIT_DIR" | wc -L)"
+
+TMP="$(mktemp)"
+git tag -n --sort "$TAG_SORT" | grep -E "$TAG_REGEX" > "$TMP"
+
+[[ -s "$TMP"       ]] || success "NOHING TODO, NO TAGS FOUND"
+[[ -n "$DES_WIDTH" ]] || DES_WIDTH="$(get_tag_description_width)"
 
 if [[ "$NO_TAG_LINK" -eq 1 ]]
 then
@@ -57,25 +75,26 @@ printf "| %-10s | %-*s | %-*s |\n" \
        "$DES_WIDTH"                \
        ' '                         | sed 's/ /-/g'
 
-git tag -n --sort "$TAG_SORT" \
-  | grep -E "$TAG_REGEX" \
-  | while read -r TAG DESCRIPTION
-    do
+while read -r TAG DESCRIPTION
+do
 
-      DATE="$(git log -1 --format=%ci "$TAG" | grep -Eo "$DATE_REGEX")"
-      FILE="${GIT_DIR}-${TAG}.md"
+  DATE="$(git log -1 --format=%ci "$TAG" | grep -Eo "$DATE_REGEX")"
+  FILE="${GIT_DIR}-${TAG}.md"
 
-      if [[ "$NO_TAG_LINK" -eq 1 ]]
-      then
-        TAG_LINK="$(printf "\`%*s\`" "$TAG_WIDTH" "$TAG")"
-      else
-        TAG_LINK="$(printf "[\`%*s\`](%s)" "$TAG_WIDTH" "$TAG" "$FILE")"
-      fi
+  if [[ "$NO_TAG_LINK" -eq 1 ]]
+  then
+    TAG_LINK="$(printf "\`%*s\`" "$TAG_WIDTH" "$TAG")"
+  else
+    TAG_LINK="$(printf "[\`%*s\`](%s)" "$TAG_WIDTH" "$TAG" "$FILE")"
+  fi
 
-      printf "| %10s | %-*s | %-*s |\n" \
-             "$DATE"                    \
-             "$COL_WIDTH"               \
-             "$TAG_LINK"                \
-             "$DES_WIDTH"               \
-             "$DESCRIPTION"
-    done
+  printf "| %10s | %-*s | %-*s |\n" \
+         "$DATE"                    \
+         "$COL_WIDTH"               \
+         "$TAG_LINK"                \
+         "$DES_WIDTH"               \
+         "$DESCRIPTION"
+
+done < "$TMP"
+
+rm -f "$TMP"
