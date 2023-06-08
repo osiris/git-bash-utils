@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiris@gcoop.coop>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC2129
+
+[[ -n "$BASH_DEBUG"         ]] && set -x
+[[ -d '.git'                ]] || exit 1
+[[ -n "$GIT_URL"            ]] || GIT_URL="$(git-remote-geturl)"
+[[ -n "$GIT_DIR"            ]] || GIT_DIR="$(rev <<< "$GIT_URL" | cut -d/ -f1 | rev)"
+[[ -n "$HEADER"             ]] || HEADER="$(mktemp)"
+[[ -n "$FOOTER"             ]] || FOOTER="$(mktemp)"
+[[ -n "$README"             ]] || README='README.md'
+[[ -e "$PWD/.readme-header" ]] && HEADER="$PWD/.readme-header"
+[[ -e "$PWD/.readme-footer" ]] && FOOTER="$PWD/.readme-footer"
+[[ -e "$PWD/.description"   ]] && DESCRIPTION="$(cat "$PWD/.description")"
+[[ -n "$AUTHOR_NAME"        ]] || AUTHOR_NAME='Osiris Alejandro Gómez'
+[[ -n "$AUTHOR_SITE"        ]] || AUTHOR_SITE='https://osiux.com/'
+[[ -n "$COMPANY_NAME"       ]] || COMPANY_NAME='gcoop Cooperativa de Software Libre'
+[[ -n "$COMPANY_SITE"       ]] || COMPANY_SITE='https://www.gcoop.coop/'
+[[ -n "$RELATIONSHIP"       ]] || RELATIONSHIP='worker cooperative of'
+[[ -n "$LICENSE"            ]] || LICENSE='GNU General Public License, GPLv3.'
+
+get_year()
+{
+  git-commit-first | awk '{print $3}' | grep -Eo '[0-9]{4}'
+}
+
+generate_header()
+{
+HEAD=$(cat << EOF
+# \`$GIT_DIR\`
+
+$DESCRIPTION
+
+## _Tags Summary_
+EOF
+)
+
+echo "$HEAD" > "$HEADER"
+}
+
+generate_footer()
+{
+
+  [[ -n "$YEAR" ]] || YEAR="$(get_year)"
+
+FOOT=$(cat << EOF
+## License
+
+$LICENSE
+
+## Author Information
+
+This repo was created in $YEAR by
+[$AUTHOR_NAME]($AUTHOR_SITE), $RELATIONSHIP
+[$COMPANY_NAME]($COMPANY_SITE).
+EOF
+)
+
+echo "$FOOT" > "$FOOTER"
+}
+
+[[ -s "$HEADER"  ]] || generate_header
+[[ -s "$FOOTER"  ]] || generate_footer
+
+cat "$HEADER"   >  "$README"
+echo ""         >> "$README"
+git-tag-summary >> "$README"
+echo ""         >> "$README"
+cat "$FOOTER"   >> "$README"
