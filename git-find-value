@@ -25,7 +25,7 @@ function usage()
 {
 cat << EOF
 
-## \`$BIN\` Find value in all tags and show value in each tag
+## \`$BIN\` Find and show value in all tags and branchs
 
 ### Usage:
 
@@ -52,10 +52,12 @@ exit 0
 
 [[ "$1" =~ ^[-]+(h|help) ]] && usage
 
-[[ -d "$PWD/.git" ]] || die "INVALID GIT REPOSITORY"
-[[ -z "$1"        ]] && die "EMPTY VALUE"
-[[ -z "$2"        ]] || FILE="$2"
-[[ -z "$FILE"     ]] && die "EMPTY FILE"
+[[ -d "$PWD/.git"       ]] || die "INVALID GIT REPOSITORY"
+[[ -z "$1"              ]] && die "EMPTY VALUE"
+[[ -z "$2"              ]] || FILE="$2"
+[[ -z "$FILE"           ]] && die "EMPTY FILE"
+[[ -n "$BRANCH_EXCLUDE" ]] || BRANCH_EXCLUDE='HEAD'
+
 VALUE="$1"
 
 TMP="$(mktemp)"
@@ -71,6 +73,23 @@ do
   [[ -z "$GREP" ]] && continue
 
   printf "%s %s\\n" "$TAG" "$GREP"
+
+done < "$TMP"
+
+git branch                     \
+  | tr '*' ' '                 \
+  | grep -vE "$BRANCH_EXCLUDE" \
+  | tr -d ' '                  > "$TMP"
+
+while read -r BRANCH _
+do
+
+  git checkout "$BRANCH" >/dev/null 2>/dev/null
+
+  GREP="$(grep "$VALUE" "$FILE" 2>/dev/null)"
+  [[ -z "$GREP" ]] && continue
+
+  printf "%s %s\\n" "$BRANCH" "$GREP"
 
 done < "$TMP"
 
