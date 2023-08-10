@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+CURRENT_BRANCH="$(git branch | grep -E '^\*' | awk '{print $2}')"
+NEXT_TAG="$(git-tag-next)"
+[[ -n "$NEXT_RELEASE"           ]] || NEXT_RELEASE="${NEXT_TAG//v/}"
+[[ -z "$1"                      ]] || NEXT_RELEASE="$1"
+[[ -z "$2"                      ]] || ISSUE_ID="$2"
+[[ "$CURRENT_BRANCH" != develop ]] && exit 1
+[[ -z "$NEXT_RELEASE"           ]] && exit 1
+
+git branch | grep -v '\*' | grep release | xargs git branch -d 2>/dev/null
+
+CMD="git flow release start ${NEXT_RELEASE//v/}"
+echo "$CMD ... (press CTRL+C to abort)"
+for i in {1..5};do echo .;sleep "$i";done
+bash -c "$CMD"
+
+if command -v gl-mr-new >/dev/null
+then
+  gl-mr-new "$ISSUE_ID"
+fi
