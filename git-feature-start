@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+function die()
+{
+  echo >&2 "$1"
+  exit 1
+}
+
+CURRENT_BRANCH="$(git branch | grep -E '^\*' | awk '{print $2}')"
+
+[[ -n "$NEXT_FEATURE" ]] || NEXT_FEATURE="$1"
+[[ -n "$ISSUE"        ]] || ISSUE="$2"
+[[ -z "$NEXT_FEATURE" ]] && die "EMPTY NEXT_FEATURE"
+
+[[ "$CURRENT_BRANCH" = "$NEXT_FEATURE" ]] && exit 0
+
+if [[ "$CURRENT_BRANCH" != develop ]]
+then
+
+  echo "STASH"
+  git stash
+  echo "CHECKOUT DEVELOP"
+  git checkout develop
+
+else
+
+  echo "STASH"
+  git stash
+  echo "PULL DEVELOP"
+  git pull
+
+fi
+
+if [[ "$CURRENT_BRANCH" != "$NEXT_FEATURE" ]]
+then
+
+  CMD="git flow feature start ${NEXT_FEATURE//_/-}"
+  echo "$CMD ... (press CTRL+C to abort)"
+  for i in {1..5};do echo .;sleep "$i";done
+  bash -c "$CMD"
+
+fi
+
+if command -v gl-mr-new 2>/dev/null
+then
+  gl-mr-new "$ISSUE"
+fi
