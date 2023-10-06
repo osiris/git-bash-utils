@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# This script comes with ABSOLUTELY NO WARRANTY, use at own risk
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiux@osiux.com>
+# Copyright (C) 2022 Osiris Alejandro Gomez <osiris@gcoop.coop>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# shellcheck disable=SC1091
+# shellcheck disable=SC1090
+# shellcheck source=/dev/null
+
+[[ -n "$BASH_DEBUG" ]] && set -x
+DIR_BIN="$(dirname "$0")" && source "$DIR_BIN/git-src-common"
+
+function usage()
+{
+cat << EOF
+
+## \`$BIN\` show log diff between two branchs or tags
+
+### Usage
+
+\`\`\`bash
+
+  $BIN [TAG|BRANCH]
+
+\`\`\`
+
+### Example
+
+\`\`\`bash
+
+  $BIN v0.2.2
+
+	4e14224 Merge branch 'hotfix/wol-wait-lspci' into support/0.2.x
+	4ed972c README: add Hardware Tested
+	482853f gitlab-ci: add ansible-awx-wst-hpt-sys in ansible-awx stage to execute wst_hpt_sys_v0.2.3
+	53dfa13 gitlab-ci: bump AWX_GITLAB_JOB_LAUNCH to wst_hpt_bio_v0.2.3 in ansible-lint stage
+	ef9fe7f tests/ansible-lint: force string in skip_list
+	a3646de ansible-lint: force string in skip_list
+	bf9642c README: add playbooks overview
+	f1a9820 tests/test: rename playbook name to Install HP Linux Tools
+	33e46a7 tests/wol-wait-lspci: end play on invalid system_vendor when hplt_dmi_system_vendor and hplt_dmi_valid_system_vendor are defined
+	8d3a770 tasks/lspci: fail when hplt_lspci_eth_status not found when hplt_lspci_eth_device_register is defined
+	e7a3719 gitlab-ci: add wol-wait-system-info.yml playbook in ansible-lint stage
+	4a1feec tests/wol-wait-system-info: add wol-wait-system-info playbook for WakeOnLAN, wait for SSH and get and show System Info
+	b67f715 tasks/lspci: failt when hplt_lspci_eth_status not found only when the conditionals are defined
+	faf3f80 tasks/lspci: obtaining information from lspci only when the conditionals are defined
+	75c8647 gitlab-ci: add wst_hpt_pci_v0.2.3 in ansible-awx stage
+	a8c085e gitlab-ci: add wol-wait-lspci.yml playbook to verify lspci output
+	1b17694 tests/wol-wait-lspci: add wol-wait-lspci playbook for WakeOnLAN, wait for SSH and verify lspci output
+
+\`\`\`
+
+EOF
+exit 0
+}
+
+[[ "$1" =~ ^[-]+(h|help) ]] && usage
+
+[[ -d '.git'  ]] || die "NOT FOUND VALID GIT REPOSITORY"
+
+CURRENT_BRANCH="$(git branch | grep -E '^\*' | awk '{print $2}')"
+CURRENT_TAG="$(git describe --tags)"
+[[ "$CURRENT_BRANCH" =~ .*HEAD.* ]] && CURRENT_BRANCH="$CURRENT_TAG"
+
+[[ -n "$FROM" ]] || FROM="$(git-last-tag)"
+[[ -z "$1"    ]] || FROM="$1"
+[[ -z "$FROM" ]] && die "EMPTY FROM branch/tag"
+[[ -n "$TO"   ]] || TO="$CURRENT_BRANCH"
+[[ -z "$2"    ]] || TO="$2"
+[[ -z "$TO"   ]] && die "EMPTY TO branch/tag"
+
+git log --oneline --pretty --format="%h %s" "$TO"..."$FROM"
