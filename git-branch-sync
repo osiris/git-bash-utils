@@ -16,15 +16,40 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+[[ -n "$NORMAL" ]] || NORMAL=$(tput sgr0)
+[[ -n "$RED"    ]] || RED=$(tput setaf 196)
+
+function stderror()
+{
+  echo >&2 "${RED}ERROR: ${1}${NORMAL}"
+}
+
+function die()
+{
+  stderror "$1"
+  exit 1
+}
+
 [[ -d "$PWD/.git" ]] || exit 1
 [[ -n "$ORIGIN"   ]] || ORIGIN='origin'
+[[ -n "$NAME"     ]] || NAME="$(basename "$PWD")"
 
-git fetch || exit 1
+PREVIOUS_BRANCH="$(git branch | grep -E '^\*' | awk '{print $2}')"
+
+
+git stash
+git fetch || die "FAILED TO FETCH $(dirname "$PWD") IN $NAME"
 
 git branch -r | cut -d/ -f2- | grep -v HEAD | while read -r B
 do
 
   UPSTREAM="--set-upstream-to=origin/$B"
-  git checkout "$B" && git branch "$UPSTREAM" "$B" && git pull
+  git checkout "$B" \
+    && git branch "$UPSTREAM" "$B" \
+    && git pull
+  RC="$?"
+  [[ "$RC" -ne 0 ]] && stderror "FAILED TO PULL BRANCH $B IN $NAME"
 
 done
+
+git checkout "$PREVIOUS_BRANCH"
