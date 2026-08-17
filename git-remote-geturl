@@ -24,6 +24,6 @@
 [[ -n "$FILTER"  ]] || FILTER='.*'
 [[ -z "$2"       ]] || FILTER="$2"
 
-git remote get-url "$ORIGIN" $GET_ALL           \
-  | sed 's/[a-z0-9\+\-]\+:[a-zA-Z0-9_\-]\+@//g' \
+git remote get-url "$ORIGIN" $GET_ALL \
+  | sed 's|://.*@|://|g'              \
   | grep -E "$FILTER"
